@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.recharts-tooltip-label {
+  @apply text-black text-xl;
+}
+
+.recharts-default-tooltip {
+  @apply rounded-md text-sm;
+}

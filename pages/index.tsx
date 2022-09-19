@@ -1,86 +1,126 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import type { NextPage } from "next";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { TOWNS } from "../towns";
+import { Regions } from "../types";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 const Home: NextPage = () => {
+  const [regions, setRegions] = useState<Regions[] | undefined>(undefined);
+  const [towns, setTowns] = useState<any | null>(null);
+
+  const getRegionOutages = async () => {
+    const res = await axios.get(
+      "https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService"
+    );
+    setRegions(res.data.regions);
+    console.log(res);
+    return res;
+  };
+
+  const getTownOutages = async () => {
+    const res = await axios.post(
+      "https://api.miluma.lumapr.com/miluma-outage-api/outage/municipality/towns",
+      TOWNS
+    );
+    setTowns(res);
+    console.log(res);
+    return res;
+  };
+
+  useEffect(() => {
+    // Fetch data for towns and regions endpoints
+    getRegionOutages();
+    getTownOutages();
+  }, []);
+
+  const getCurrentDate = () => {
+    const date = new Date().toLocaleDateString("en-us", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+
+    return `Updated on: ${date}`;
+  };
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <div className="flex w-full min-w-full min-h-screen flex-col bg-black text-white items-center justify-center py-2">
       <Head>
-        <title>Create Next App</title>
+        <title>Apagones en Puerto Rico</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
+        <h1 className="text-4xl mb-4 w-[50rem]">
+          Service Interruptions Reported by LUMA / Interrupciones de Servicio
+          Reportado por LUMA
         </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
+        <ResponsiveContainer width="75%" height={500}>
+          <AreaChart
+            data={regions}
+            margin={{
+              top: 10,
+              right: 30,
+              left: 20,
+              bottom: 0,
+            }}
           >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis stroke="white" dataKey="name" />
+            <YAxis stroke="white" />
+            <Tooltip />
+            <Area
+              type="monotone"
+              dataKey="totalClients"
+              name="Total Clients"
+              stroke="#FF4A4A"
+              fill="#FF4A4A"
+            />
+            <Area
+              type="monotone"
+              dataKey="totalClientsWithoutService"
+              name="Total Clients Without Service"
+              stroke="#FF9551"
+              fill="#FF9551"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+        <p className="mt-1 font-light">{getCurrentDate()}</p>
+        <div className="mt-10">
+          <h2 className="text-2xl mb-2">Petitions / Peticiones</h2>
           <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
+            className="hover:underline"
+            href="https://www.change.org/p/cancelacion-contrato-luma-puerto-rico?original_footer_petition_id=815564&algorithm=promoted&source_location=petition_footer&grid_position=1&pt=AVBldGl0aW9uABDcCgIAAAAAYxMkAnvsIz83ZTJjNzYyYg%3D%3D"
           >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
+            Cancelacion Contrato Luma Puerto Rico
           </a>
         </div>
       </main>
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
+      <footer className="flex text-sm flex-col h-24 w-full items-center justify-center">
+        <p>Built by Kelvin Brito</p>
+        <p>Not affiliated with the Puerto Rican Government or LUMA Energy.</p>
+        <p>No está afiliado con el Gobierno de Puerto Rico o LUMA Energy.</p>
         <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          className="underline mt-2"
+          href="https://miluma.lumapr.com/outages/outageMap"
         >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+          Original Data Source
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
