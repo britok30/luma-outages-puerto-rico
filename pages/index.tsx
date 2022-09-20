@@ -42,14 +42,14 @@ const Home = ({
       <Seo />
 
       <main className="flex w-full flex-col items-center justify-center text-center py-10">
-        <h1 className="text-4xl mb-4">
+        <h1 className="text-2xl md:text-4xl mb-4">
           Service Interruptions Reported by LUMA / Interrupciones de Servicio
           Reportado por LUMA
         </h1>
         <AreaChartPR regions={outages.regions} />
         <TotalStatsPR totalStats={outages.totals} />
 
-        <h2 className="text-2xl my-6">
+        <h2 className="text-xl md:text-2xl my-6">
           Total Zones Affected Per Municipalities of Puerto Rico / Total Zonas
           Afectadas Por Municipios de Puerto Rico
         </h2>

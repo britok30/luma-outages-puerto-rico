@@ -2,8 +2,8 @@ import React from "react";
 
 export const Petitions = () => {
   return (
-    <div className="mt-10 flex flex-col text-lg">
-      <h2 className="text-2xl mb-2 text-red-400">
+    <div className="mt-10 flex flex-col text-md">
+      <h2 className="text-xl md:text-2xl mb-2 text-red-400">
         Petitions / Peticiones via{" "}
         <a
           className="underline"

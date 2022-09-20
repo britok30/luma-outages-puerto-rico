@@ -2,8 +2,8 @@ import React from "react";
 
 const HelpPR = () => {
   return (
-    <div className="mt-10 flex flex-col text-lg justify-center items-center">
-      <h2 className="text-2xl mb-2 text-red-400">
+    <div className="mt-10 flex flex-col text-md justify-center items-center">
+      <h2 className="text-xl md:text-2xl mb-2 text-red-400">
         Help Puerto Rico / Ayuda a Puerto Rico
       </h2>
       <div className="w-full md:w-2/3 text-left">
