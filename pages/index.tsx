@@ -55,8 +55,9 @@ const Home = ({
                 transform: "translate(-50%, -50%)",
               }}
             >
-              <h1 className="text-6xl md:text-8xl font-light">
-                Apagón Puerto Rico
+              <h1 className="text-6xl md:text-8xl font-serif">
+                Apagón <span className="text-blue-500">Puerto</span>{" "}
+                <span className="text-red-400">Rico</span>
               </h1>
             </div>
             <Image
