@@ -3,7 +3,7 @@ import React from "react";
 export const Petitions = () => {
   return (
     <div className="mt-10 flex flex-col">
-      <h2 className="text-2xl md:text-4xl mb-2 text-blue-500">
+      <h2 className="text-xl md:text-4xl mb-2 text-blue-500">
         Petitions | Peticiones via{" "}
         <a
           className="underline"
@@ -11,7 +11,7 @@ export const Petitions = () => {
           rel="no_referrer"
           href="https://www.change.org/"
         >
-          @Change
+          Change
         </a>
       </h2>
       <p className="text-gray-400 text-left text-md md:text-lg">
