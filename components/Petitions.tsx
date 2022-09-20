@@ -3,15 +3,15 @@ import React from "react";
 export const Petitions = () => {
   return (
     <div className="mt-10 flex flex-col">
-      <h2 className="text-xl md:text-4xl mb-2 text-blue-500">
-        Petitions | Peticiones via{" "}
+      <h2 className="text-2xl md:text-4xl mb-2 text-blue-500">
+        Petitions | Peticiones{" "}
         <a
-          className="underline"
+          className="underline text-xl md:text-2xl block"
           target="_blank"
           rel="no_referrer"
           href="https://www.change.org/"
         >
-          Change
+          via Change
         </a>
       </h2>
       <p className="text-gray-400 text-left text-md md:text-lg">
