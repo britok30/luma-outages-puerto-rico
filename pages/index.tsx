@@ -12,6 +12,7 @@ import { NewsComponent } from "../components/NewsComponent";
 import { Seo } from "../components/Seo";
 import { toTitleCase } from "../utils";
 import HelpPR from "../components/HelpPR";
+import Image from "next/image";
 
 const Home = ({
   outages,
@@ -46,10 +47,31 @@ const Home = ({
       <Seo />
 
       <main className="flex w-full flex-col items-center justify-center text-center py-10">
-        <h1 className="text-2xl md:text-4xl mb-4">
+        <header>
+          <div className="h-screen mb-10">
+            <div
+              className="relative top-[50%] left-[50%] text-white"
+              style={{
+                transform: "translate(-50%, -50%)",
+              }}
+            >
+              <h1 className="text-6xl md:text-8xl font-light">
+                Apagón Puerto Rico
+              </h1>
+            </div>
+            <Image
+              className="opacity-30"
+              src="/hero.jpg"
+              alt="hero-img-puerto-rico"
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
+        </header>
+        <h2 className="text-xl md:text-2xl mb-4">
           Service Interruptions Reported by LUMA | Interrupciones de Servicio
           Reportado por LUMA
-        </h1>
+        </h2>
         <AreaChartPR regions={outages.regions} />
         <TotalStatsPR totalStats={outages.totals} regions={outages.regions} />
 
@@ -59,7 +81,8 @@ const Home = ({
         </h2>
         <PieChartPR pieChartData={pieChartData} />
         <Petitions />
-        <NewsComponent newsEntries={newsEntries} />
+        {/* News Component was experimental and I have a limit on the API */}
+        {/* <NewsComponent newsEntries={newsEntries} /> */}
         <HelpPR />
       </main>
       <Footer />
