@@ -10,9 +10,11 @@ export const TotalStatsPR = ({
 }) => {
   return (
     <div className="my-6 border rounded-lg p-4 md:w-1/3">
-      <h2 className="text-2xl md:text-4xl text-blue-500 mb-2">Ahora en Puerto Rico</h2>
+      <h2 className="text-2xl md:text-4xl text-blue-500 mb-2">
+        Ahora en Puerto Rico
+      </h2>
 
-      <div className="text-lg font-light text-left grid grid-cols-1 md:grid-cols-2 space-y-4">
+      <div className="text-lg font-light text-left grid grid-cols-1 md:grid-cols-2 md:gap-x-5">
         <div className="my-2 text-xs">
           <p className="text-red-400 text-xl md:text-2xl mb-1">
             {totalStats?.totalClientsWithoutService.toLocaleString() || "-"}
