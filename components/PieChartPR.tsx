@@ -52,7 +52,7 @@ export const PieChartPR = ({
   };
 
   return (
-    <div className="h-[800px] w-full">
+    <div className="h-[300px] w-full md:w-2/3 overflow-y-scroll">
       <ResponsiveContainer>
         <PieChart>
           <Pie
@@ -62,8 +62,8 @@ export const PieChartPR = ({
             data={pieChartData}
             cx="50%"
             cy="50%"
-            outerRadius={300}
-            innerRadius={50}
+            innerRadius="30%"
+            outerRadius="80%"
             fill="#8884d8"
             paddingAngle={2}
             label={renderCustomizedLabel}

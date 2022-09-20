@@ -12,7 +12,7 @@ import { Regions } from "../types";
 
 export const AreaChartPR = ({ regions }: { regions?: Regions[] }) => {
   return (
-    <div className="h-[500px] w-full md:w-1/2">
+    <div className="w-full h-[200px] md:w-2/3 md:h-[500px]">
       <ResponsiveContainer>
         <AreaChart
           data={regions}
