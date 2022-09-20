@@ -17,16 +17,16 @@ import Image from "next/image";
 const Home = ({
   outages,
   towns,
-  news,
-}: {
+}: // news,
+{
   outages: {
     regions: Regions[];
     totals: Totals;
   };
   towns: Towns;
-  news: News;
+  // news: News;
 }) => {
-  const { entries: newsEntries } = news;
+  // const { entries: newsEntries } = news;
   const pieChartData = useMemo(() => {
     const data =
       towns &&
@@ -101,23 +101,22 @@ export const getServerSideProps: GetServerSideProps = async () => {
     TOWNS
   );
 
-  const { data: news } = await axios.get(
-    "https://google-search3.p.rapidapi.com/api/v1/news/q=puerto+rico+luma",
-    {
-      headers: {
-        "X-User-Agent": "desktop",
-        "X-Proxy-Location": "EU",
-        "X-RapidAPI-Key": "ad5d8d4b9fmsh6afde80d45081c7p106fb9jsnef296f3c0c38",
-        "X-RapidAPI-Host": "google-search3.p.rapidapi.com",
-      },
-    }
-  );
+  // const { data: news } = await axios.get(
+  //   "https://google-search3.p.rapidapi.com/api/v1/news/q=puerto+rico+luma",
+  //   {
+  //     headers: {
+  //       "X-User-Agent": "desktop",
+  //       "X-Proxy-Location": "EU",
+  //       "X-RapidAPI-Key": "ad5d8d4b9fmsh6afde80d45081c7p106fb9jsnef296f3c0c38",
+  //       "X-RapidAPI-Host": "google-search3.p.rapidapi.com",
+  //     },
+  //   }
+  // );
 
   return {
     props: {
       outages: outages,
       towns: data,
-      news: news,
     },
   };
 };
