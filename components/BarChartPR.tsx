@@ -27,7 +27,7 @@ export const BarChartPR = ({
   ];
 
   return (
-    <div className="w-full h-[200px] md:w-2/3 md:h-[500px]">
+    <div className="w-full h-[200px] md:w-3/4 md:h-[500px]">
       <ResponsiveContainer>
         <ComposedChart
           data={barChartData}
