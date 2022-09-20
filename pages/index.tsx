@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { TOWNS } from "../towns";
@@ -12,49 +12,16 @@ import { Seo } from "../components/Seo";
 import { toTitleCase } from "../utils";
 import HelpPR from "../components/HelpPR";
 
-const Home: NextPage = () => {
-  const [regions, setRegions] = useState<Regions[] | undefined>(undefined);
-  const [totalStats, setTotalStats] = useState<Totals | undefined>(undefined);
-  const [towns, setTowns] = useState<Towns | undefined>(undefined);
-
-  const getRegionOutages = async () => {
-    const res = await axios.get(
-      "https://corsanywhere.herokuapp.com/https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService",
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-        },
-      }
-    );
-
-    setRegions(res.data.regions);
-    setTotalStats(res.data.totals);
-    return res;
+const Home = ({
+  outages,
+  towns,
+}: {
+  outages: {
+    regions: Regions[];
+    totals: Totals;
   };
-
-  const getTownOutages = async () => {
-    const res = await axios.post(
-      "https://corsanywhere.herokuapp.com/https://api.miluma.lumapr.com/miluma-outage-api/outage/municipality/towns",
-      TOWNS,
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-        },
-      }
-    );
-
-    setTowns(res.data);
-    return res;
-  };
-
-  useEffect(() => {
-    // Fetch data for towns and regions endpoints
-    getRegionOutages();
-    getTownOutages();
-  }, []);
-
+  towns: Towns;
+}) => {
   const pieChartData = useMemo(() => {
     const data =
       towns &&
@@ -79,8 +46,8 @@ const Home: NextPage = () => {
           Service Interruptions Reported by LUMA / Interrupciones de Servicio
           Reportado por LUMA
         </h1>
-        <AreaChartPR regions={regions} />
-        <TotalStatsPR totalStats={totalStats} />
+        <AreaChartPR regions={outages.regions} />
+        <TotalStatsPR totalStats={outages.totals} />
 
         <h2 className="text-2xl my-6 w-[50rem]">
           Total Zones Affected Per Municipalities of Puerto Rico / Total Zonas
@@ -96,3 +63,21 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { data: outages } = await axios.get(
+    "https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService"
+  );
+
+  const { data } = await axios.post(
+    "https://api.miluma.lumapr.com/miluma-outage-api/outage/municipality/towns",
+    TOWNS
+  );
+
+  return {
+    props: {
+      outages: outages,
+      towns: data,
+    },
+  };
+};

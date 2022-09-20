@@ -70,7 +70,7 @@ export const PieChartPR = ({
             isAnimationActive={false}
           >
             {pieChartData?.map((_, index) => (
-              <Cell fill={COLORS[index % COLORS.length]} />
+              <Cell key={index} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
         </PieChart>
