@@ -48,13 +48,8 @@ const Home = ({
 
       <main className="flex w-full flex-col items-center justify-center text-center py-10">
         <header>
-          <div className="h-screen mb-10">
-            <div
-              className="relative top-[50%] left-[50%] text-white"
-              style={{
-                transform: "translate(-50%, -50%)",
-              }}
-            >
+          <div className="h-screen flex justify-center items-center mb-10">
+            <div className="text-white">
               <h1 className="text-6xl md:text-8xl font-serif">
                 Apagón
                 <div>
