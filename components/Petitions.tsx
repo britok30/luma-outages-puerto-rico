@@ -2,8 +2,8 @@ import React from "react";
 
 export const Petitions = () => {
   return (
-    <div className="mt-10 flex flex-col text-md">
-      <h2 className="text-xl md:text-2xl mb-2 text-red-400">
+    <div className="mt-10 flex flex-col">
+      <h2 className="text-2xl md:text-4xl mb-2 text-red-400">
         Petitions / Peticiones via{" "}
         <a
           className="underline"
@@ -14,22 +14,28 @@ export const Petitions = () => {
           @Change
         </a>
       </h2>
-      <a
-        target="_blank"
-        rel="no_referrer"
-        className="underline mb-3"
-        href="https://www.change.org/p/cancelacion-contrato-luma-puerto-rico?original_footer_petition_id=815564&algorithm=promoted&source_location=petition_footer&grid_position=1&pt=AVBldGl0aW9uABDcCgIAAAAAYxMkAnvsIz83ZTJjNzYyYg%3D%3D"
-      >
-        Cancelacion Contrato Luma Puerto Rico
-      </a>
-      <a
-        target="_blank"
-        rel="no_referrer"
-        className="underline"
-        href="https://www.change.org/p/gobernador-pedro-pierluisi-protect-puerto-rico-s-land?recruiter=1185529629&recruited_by_id=6b94ac90-8375-11eb-9f2b-69cd1d0deb8b&utm_source=share_petition&utm_medium=copylink&utm_campaign=petition_dashboard"
-      >
-        Protejamos las tierras de Puerto Rico
-      </a>
+      <p className="text-gray-400 text-left text-md md:text-lg">
+        Cancelacion Contrato Luma Puerto Rico:{" "}
+        <a
+          target="_blank"
+          rel="no_referrer"
+          className="hover:underline font-bold text-white mb-3 block text-xs md:text-sm"
+          href="https://www.change.org/p/cancelacion-contrato-luma-puerto-rico?original_footer_petition_id=815564&algorithm=promoted&source_location=petition_footer&grid_position=1&pt=AVBldGl0aW9uABDcCgIAAAAAYxMkAnvsIz83ZTJjNzYyYg%3D%3D"
+        >
+          Source
+        </a>
+      </p>
+      <p className="text-gray-400 text-left text-md md:text-lg">
+        Protejamos las tierras de Puerto Rico:{" "}
+        <a
+          target="_blank"
+          rel="no_referrer"
+          className="hoverunderline font-bold text-white block text-xs md:text-sm"
+          href="https://www.change.org/p/gobernador-pedro-pierluisi-protect-puerto-rico-s-land?recruiter=1185529629&recruited_by_id=6b94ac90-8375-11eb-9f2b-69cd1d0deb8b&utm_source=share_petition&utm_medium=copylink&utm_campaign=petition_dashboard"
+        >
+          Source
+        </a>
+      </p>
     </div>
   );
 };
