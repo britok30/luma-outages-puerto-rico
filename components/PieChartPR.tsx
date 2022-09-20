@@ -1,5 +1,5 @@
 import React from "react";
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 export const PieChartPR = ({
   pieChartData,
@@ -56,6 +56,7 @@ export const PieChartPR = ({
     <div className="h-[300px] w-full md:w-2/3 md:h-[800px]">
       <ResponsiveContainer>
         <PieChart>
+          <Tooltip />
           <Pie
             dataKey="size"
             startAngle={0}
