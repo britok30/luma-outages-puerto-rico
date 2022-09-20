@@ -51,7 +51,7 @@ const Home = ({
           Reportado por LUMA
         </h1>
         <AreaChartPR regions={outages.regions} />
-        <TotalStatsPR totalStats={outages.totals} />
+        <TotalStatsPR totalStats={outages.totals} regions={outages.regions} />
 
         <h2 className="text-xl md:text-2xl my-6">
           Total Zones Affected Per Municipalities of Puerto Rico / Total Zonas
