@@ -6,7 +6,7 @@ const HelpPR = () => {
       <h2 className="text-2xl mb-2 text-red-400">
         Help Puerto Rico / Ayuda a Puerto Rico
       </h2>
-      <div className="w-1/3 text-left">
+      <div className="w-2/3 text-left">
         <p className="mb-4">
           <a
             className="text-blue-500"
