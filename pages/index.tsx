@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { TOWNS } from "../towns";
@@ -9,6 +8,7 @@ import { TotalStatsPR } from "../components/TotalStatsPR";
 import { PieChartPR } from "../components/PieChartPR";
 import { Petitions } from "../components/Petitions";
 import { Footer } from "../components/Footer";
+import { Seo } from "../components/Seo";
 import { toTitleCase } from "../utils";
 import HelpPR from "../components/HelpPR";
 
@@ -60,10 +60,7 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex w-screen min-w-fit min-h-screen flex-col bg-black text-white items-center justify-center p-6 md:p-0">
-      <Head>
-        <title>Power Outages in Puerto Rico | Apagones en Puerto Rico</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Seo />
 
       <main className="flex w-full flex-col items-center justify-center text-center py-10">
         <h1 className="text-4xl mb-4 w-[50rem]">
