@@ -15,7 +15,9 @@ export const Petitions = () => {
         </a>
       </h2>
       <p className="text-gray-400 text-left text-md md:text-lg">
-        Cancelacion Contrato Luma Puerto Rico:{" "}
+        <span className="font-bold text-white">
+          Cancelacion Contrato Luma Puerto Rico
+        </span>{" "}
         <a
           target="_blank"
           rel="no_referrer"
@@ -26,7 +28,9 @@ export const Petitions = () => {
         </a>
       </p>
       <p className="text-gray-400 text-left text-md md:text-lg">
-        Protejamos las tierras de Puerto Rico:{" "}
+        <span className="font-bold text-white">
+          Protejamos las tierras de Puerto Rico
+        </span>{" "}
         <a
           target="_blank"
           rel="no_referrer"
