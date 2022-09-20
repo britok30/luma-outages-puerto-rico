@@ -12,6 +12,8 @@ const HelpPR = () => {
           elementos esenciales que incluyen tabletas de purificación de agua,
           lámparas solares, agua filtros y botiquines de primeros auxilios.{" "}
           <a
+            target="_blank"
+            rel="no_referrer"
             className="text-blue-500 font-bold block mt-1 text-xs md:text-sm"
             href="https://www.instagram.com/p/Ciq7t-BsgI0/"
           >
@@ -22,6 +24,8 @@ const HelpPR = () => {
           Puerto Rican Civic Club esta recaudando fondos para luces solares y
           generadores de gas.{" "}
           <a
+            target="_blank"
+            rel="no_referrer"
             className="text-blue-500 font-bold block mt-1 text-xs md:text-sm"
             href="http://www.puertoricancivicclub.org/"
           >
@@ -37,6 +41,8 @@ const HelpPR = () => {
           esenciales de socorro en casos de desastre, incluidos filtros de agua
           y linternas solares.{" "}
           <a
+            target="_blank"
+            rel="no_referrer"
             className="text-blue-500 font-bold block mt-1 text-xs md:text-sm"
             href="https://en.tallersalud.com/"
           >
@@ -47,6 +53,8 @@ const HelpPR = () => {
           Comedores Sociales de Puerto Rico es un comedor comunitario con
           programas que combaten la inseguridad alimentaria en la isla.{" "}
           <a
+            target="_blank"
+            rel="no_referrer"
             className="text-blue-500 font-bold block mt-1 text-xs md:text-sm"
             href="https://www.comedoressocialespr.org/aportar"
           >
@@ -60,6 +68,8 @@ const HelpPR = () => {
           1 millón para ayudar a los residentes de la isla y otras comunidades
           en todo el Caribe.{" "}
           <a
+            target="_blank"
+            rel="no_referrer"
             className="text-blue-500 font-bold block mt-1 text-xs md:text-sm"
             href="https://www.globalgiving.org/projects/hurricane-fiona-relief-fund/"
           >
@@ -72,6 +82,8 @@ const HelpPR = () => {
           organización ya está en Puerto Rico brindando servicios de ayuda de
           emergencia y suministros esenciales a las comunidades de toda la isla.
           <a
+            target="_blank"
+            rel="no_referrer"
             className="text-blue-500 font-bold block mt-1 text-xs md:text-sm"
             href="https://www.hispanicfederation.org/fionahelp/"
           >
@@ -84,6 +96,8 @@ const HelpPR = () => {
           organizaciones locales en toda la isla para ayudar a reconstruir la
           infraestructura y brindar ayuda en casos de desastre.
           <a
+            target="_blank"
+            rel="no_referrer"
             className="text-blue-500 font-bold block mt-1text-xs md:text-sm"
             href="https://fundly.com/prxpr"
           >
@@ -95,6 +109,8 @@ const HelpPR = () => {
           en 2017 después del huracán María. La organización se enfoca en
           proporcionar reconstrucción de viviendas a comunidades devastadas.
           <a
+            target="_blank"
+            rel="no_referrer"
             className="text-blue-500 font-bold block mt-1 text-xs md:text-sm"
             href="https://www.tpmgcorp.org/"
           >
