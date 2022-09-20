@@ -31,8 +31,8 @@ export const AreaChartPR = ({ regions }: { regions?: Regions[] }) => {
             type="monotone"
             dataKey="totalClients"
             name="Total Clients / Clientes Totales"
-            stroke="#FF9551"
-            fill="#FF9551"
+            stroke="#CA4E79"
+            fill="#CA4E79"
           />
           <Area
             type="monotone"
