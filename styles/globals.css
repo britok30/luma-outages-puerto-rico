@@ -9,3 +9,11 @@
 .recharts-default-tooltip {
   @apply rounded-md text-sm;
 }
+
+.recharts-tooltip-wrapper {
+  @apply w-[10rem] md:w-[20rem];
+}
+
+.recharts-tooltip-item {
+  @apply whitespace-pre-wrap;
+}
