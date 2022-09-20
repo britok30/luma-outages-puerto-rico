@@ -56,8 +56,11 @@ const Home = ({
               }}
             >
               <h1 className="text-6xl md:text-8xl font-serif">
-                Apagón <span className="text-blue-500">Puerto</span>{" "}
-                <span className="text-red-400">Rico</span>
+                Apagón
+                <div>
+                  <span className="text-blue-500">Puerto</span>{" "}
+                  <span className="text-red-400">Rico</span>
+                </div>
               </h1>
             </div>
             <Image
