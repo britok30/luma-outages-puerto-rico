@@ -36,7 +36,7 @@ export const TotalStatsPR = ({
           Clientes sin energía en Puerto Rico
         </div>
         {regions?.map((region, index) => (
-          <div className="my-2 text-xs">
+          <div key={index} className="my-2 text-xs">
             <p
               className={
                 index % 2
