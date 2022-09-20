@@ -40,6 +40,7 @@ export const PieChartPR = ({
 
     return (
       <text
+        className="text-xs md:text-base"
         x={x}
         y={y}
         fill="white"
@@ -57,8 +58,8 @@ export const PieChartPR = ({
         <PieChart>
           <Pie
             dataKey="size"
-            startAngle={360}
-            endAngle={0}
+            startAngle={0}
+            endAngle={360}
             data={pieChartData}
             cx="50%"
             cy="50%"
