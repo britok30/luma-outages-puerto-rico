@@ -1,14 +1,13 @@
-import type { GetServerSideProps, NextPage } from "next";
-import { useEffect, useState, useMemo } from "react";
+import type { GetServerSideProps } from "next";
+import { useMemo } from "react";
 import axios from "axios";
 import { TOWNS } from "../towns";
-import { News, Regions, Totals, Towns } from "../types";
+import { Regions, Totals, Towns } from "../types";
 import { AreaChartPR } from "../components/AreaChartPR";
 import { TotalStatsPR } from "../components/TotalStatsPR";
-import { PieChartPR } from "../components/PieChartPR";
+import { BarChartPR } from "../components/BarChartPR";
 import { Petitions } from "../components/Petitions";
 import { Footer } from "../components/Footer";
-import { NewsComponent } from "../components/NewsComponent";
 import { Seo } from "../components/Seo";
 import { toTitleCase } from "../utils";
 import HelpPR from "../components/HelpPR";
@@ -28,7 +27,7 @@ const Home = ({
   // news: News;
 }) => {
   // const { entries: newsEntries } = news;
-  const pieChartData = useMemo(() => {
+  const barChartData = useMemo(() => {
     const data =
       towns &&
       Object.entries(towns).map(([key, value]) => {
@@ -80,7 +79,7 @@ const Home = ({
           Total Zones Affected Per Municipalities of Puerto Rico | Total Zonas
           Afectadas Por Municipios de Puerto Rico
         </h2>
-        <PieChartPR pieChartData={pieChartData} />
+        <BarChartPR barChartData={barChartData} />
         <Petitions />
         {/* News Component was experimental and I have a limit on the API */}
         {/* <NewsComponent newsEntries={newsEntries} /> */}
