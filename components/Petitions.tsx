@@ -5,7 +5,12 @@ export const Petitions = () => {
     <div className="my-10 flex flex-col text-lg">
       <h2 className="text-2xl mb-2 text-red-400">
         Petitions / Peticiones via{" "}
-        <a className="underline" href="https://www.change.org/">
+        <a
+          className="underline"
+          target="_blank"
+          rel="no_referrer"
+          href="https://www.change.org/"
+        >
           @Change
         </a>
       </h2>
