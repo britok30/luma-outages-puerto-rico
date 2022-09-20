@@ -13,6 +13,7 @@ import { Seo } from "../components/Seo";
 import { toTitleCase } from "../utils";
 import HelpPR from "../components/HelpPR";
 import Image from "next/image";
+import { ArrowDown } from "react-feather";
 
 const Home = ({
   outages,
@@ -57,6 +58,7 @@ const Home = ({
                   <span className="text-red-400">Rico</span>
                 </div>
               </h1>
+              <ArrowDown className="block mt-8 mx-auto animate-bounce" />
             </div>
             <Image
               className="opacity-30"
