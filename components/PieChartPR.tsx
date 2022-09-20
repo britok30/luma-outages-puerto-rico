@@ -52,7 +52,7 @@ export const PieChartPR = ({
   };
 
   return (
-    <div className="h-[300px] w-full md:w-2/3 overflow-y-scroll">
+    <div className="h-[300px] w-full md:w-2/3 overflow-x-auto">
       <ResponsiveContainer>
         <PieChart>
           <Pie
