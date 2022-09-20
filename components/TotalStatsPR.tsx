@@ -30,15 +30,21 @@ export const TotalStatsPR = ({
           <p className="text-red-400 text-4xl mb-1">
             {`${totalStats?.totalPercentage.toFixed(0)} %` || "-"}
           </p>
-          Percentage of Clients without power / Porcentaje de Clientes sin
-          energía
+          Percentage of Clients without power in Puerto Rico / Porcentaje de
+          Clientes sin energía en Puerto Rico
         </div>
         {regions?.map((region, index) => (
           <div className="my-2 text-sm">
-            <p className={index % 2 ? "text-red-400 text-4xl mb-1" : "text-blue-500 text-4xl mb-1"}>
+            <p
+              className={
+                index % 2
+                  ? "text-red-400 text-4xl mb-1"
+                  : "text-blue-500 text-4xl mb-1"
+              }
+            >
               {`${region.percentageClientsWithoutService.toFixed(0)} %` || "-"}
             </p>
-            {`Porcentaje de Clientes sin energía en ${region.name}`}
+            {`Percentage of Clients without power in ${region.name} / Porcentaje de Clientes sin energía en ${region.name}`}
           </div>
         ))}
       </div>
