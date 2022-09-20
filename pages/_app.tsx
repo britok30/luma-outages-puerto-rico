@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Script
         async
-        src={`https://www.googletagmanager.com/gtag/js?id=G-788CH57WC0`}
+        src="https://www.googletagmanager.com/gtag/js?id=G-788CH57WC0"
       />
       <Script
         id="gtag-init"
