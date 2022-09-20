@@ -10,3 +10,13 @@ export interface Totals {
   totalClients: number;
   totalPercentage: number;
 }
+
+export interface Towns {
+  [key: string]: ZoneArea[];
+}
+
+export interface ZoneArea {
+  zone: string;
+  area: string;
+  size?: number;
+}
