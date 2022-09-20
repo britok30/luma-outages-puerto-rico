@@ -16,7 +16,7 @@ export const NewsComponent = ({
           <p className="mb-2 text-gray-400 text-md md:text-lg hover:text-white transition duration-200 ease-in-out text-left">
             {`${entry.title}`}:{" "}
             <a
-              className="hover:underline text-white text-xs md:text-sm font-bold block"
+              className="hover:underline text-red-400 text-xs md:text-sm font-bold block"
               target="_blank"
               rel="no_referrer"
               href={entry.link}
