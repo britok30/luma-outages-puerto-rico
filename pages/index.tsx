@@ -10,6 +10,7 @@ import { PieChartPR } from "../components/PieChartPR";
 import { Petitions } from "../components/Petitions";
 import { Footer } from "../components/Footer";
 import { toTitleCase } from "../utils";
+import HelpPR from "../components/HelpPR";
 
 const Home: NextPage = () => {
   const [regions, setRegions] = useState<Regions[] | undefined>(undefined);
@@ -60,7 +61,7 @@ const Home: NextPage = () => {
   return (
     <div className="flex w-screen min-w-fit min-h-screen flex-col bg-black text-white items-center justify-center p-6 md:p-0">
       <Head>
-        <title>Apagones en Puerto Rico</title>
+        <title>Power Outages in Puerto Rico | Apagones en Puerto Rico</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -78,6 +79,7 @@ const Home: NextPage = () => {
         </h2>
         <PieChartPR pieChartData={pieChartData} />
         <Petitions />
+        <HelpPR />
       </main>
       <Footer />
     </div>
