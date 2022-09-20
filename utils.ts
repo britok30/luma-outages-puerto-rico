@@ -14,3 +14,8 @@ export const getCurrentDate = () => {
 
   return `Updated on: ${date}`;
 };
+
+export const formatTitle = (title: string) => {
+  const newTitle = title.split("-")[0];
+  return newTitle;
+};
