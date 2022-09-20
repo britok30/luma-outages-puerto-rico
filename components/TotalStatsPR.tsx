@@ -28,7 +28,7 @@ export const TotalStatsPR = ({
         </div>
         <div className="my-2 text-sm">
           <p className="text-red-400 text-4xl mb-1">
-            {`${totalStats?.totalPercentage.toFixed(0)} %` || "-"}
+            {`${totalStats?.totalPercentage.toFixed(0)}%` || "-"}
           </p>
           Percentage of Clients without power in Puerto Rico / Porcentaje de
           Clientes sin energía en Puerto Rico
@@ -42,7 +42,7 @@ export const TotalStatsPR = ({
                   : "text-blue-500 text-4xl mb-1"
               }
             >
-              {`${region.percentageClientsWithoutService.toFixed(0)} %` || "-"}
+              {`${region.percentageClientsWithoutService.toFixed(0)}%` || "-"}
             </p>
             {`Percentage of Clients without power in ${region.name} / Porcentaje de Clientes sin energía en ${region.name}`}
           </div>
