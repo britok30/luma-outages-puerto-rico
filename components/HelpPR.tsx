@@ -4,7 +4,7 @@ const HelpPR = () => {
   return (
     <div className="mt-10 flex flex-col text-md justify-center items-center">
       <h2 className="text-2xl md:text-4xl mb-2 text-blue-500">
-        Help Puerto Rico / Ayuda a Puerto Rico
+        Help Puerto Rico | Ayuda a Puerto Rico
       </h2>
       <div className="w-full md:w-1/3 text-left">
         <p className="mb-4 font-light text-gray-400 hover:text-white transition duration-200 ease-in-out">

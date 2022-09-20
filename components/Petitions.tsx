@@ -4,7 +4,7 @@ export const Petitions = () => {
   return (
     <div className="mt-10 flex flex-col">
       <h2 className="text-2xl md:text-4xl mb-2 text-blue-500">
-        Petitions / Peticiones via{" "}
+        Petitions | Peticiones via{" "}
         <a
           className="underline"
           target="_blank"

@@ -11,7 +11,7 @@ export const NewsComponent = ({
   return (
     <div className="my-10">
       <h2 className="text-2xl md:text-4xl mb-2 text-red-400">
-        Puerto Rico Top News / Las mejores noticias de Puerto Rico
+        Puerto Rico Top News | Las mejores noticias de Puerto Rico
       </h2>
       {newsEntries.slice(0, 10).map((entry) => {
         

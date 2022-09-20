@@ -19,20 +19,20 @@ export const TotalStatsPR = ({
           <p className="text-red-400 text-xl md:text-2xl mb-1">
             {totalStats?.totalClientsWithoutService.toLocaleString() || "-"}
           </p>
-          Total Clients Without Service in Puerto Rico / Clientes Totales Sin
+          Total Clients Without Service in Puerto Rico | Clientes Totales Sin
           Servicio en Puerto Rico
         </div>
         <div className="my-2 text-xs">
           <p className="text-blue-500 text-xl md:text-2xl mb-1">
             {totalStats?.totalClients.toLocaleString() || "-"}
           </p>
-          Total Clients in Puerto Rico / Clientes Totales en Puerto Rico
+          Total Clients in Puerto Rico | Clientes Totales en Puerto Rico
         </div>
         <div className="my-2 text-xs">
           <p className="text-red-400 text-xl md:text-2xl mb-1">
             {`${totalStats?.totalPercentage.toFixed(0)}%` || "-"}
           </p>
-          Percentage of Clients without power in Puerto Rico / Porcentaje de
+          Percentage of Clients without power in Puerto Rico | Porcentaje de
           Clientes sin energía en Puerto Rico
         </div>
         {regions?.map((region, index) => (
@@ -46,7 +46,7 @@ export const TotalStatsPR = ({
             >
               {`${region.percentageClientsWithoutService.toFixed(0)}%` || "-"}
             </p>
-            {`Percentage of Clients without power in ${region.name} / Porcentaje de Clientes sin energía en ${region.name}`}
+            {`Percentage of Clients without power in ${region.name} | Porcentaje de Clientes sin energía en ${region.name}`}
           </div>
         ))}
       </div>
