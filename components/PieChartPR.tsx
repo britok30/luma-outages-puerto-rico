@@ -2,9 +2,9 @@ import React from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 export const PieChartPR = ({
-  mapData,
+  pieChartData,
 }: {
-  mapData?: { name: string; size: number }[];
+  pieChartData?: { name: string; size: number }[];
 }) => {
   const COLORS = [
     "#FA7070",
@@ -46,7 +46,7 @@ export const PieChartPR = ({
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
       >
-        {mapData?.[index].name} ({mapData?.[index].size})
+        {pieChartData?.[index].name} ({pieChartData?.[index].size})
       </text>
     );
   };
@@ -59,7 +59,7 @@ export const PieChartPR = ({
             dataKey="size"
             startAngle={360}
             endAngle={0}
-            data={mapData}
+            data={pieChartData}
             cx="50%"
             cy="50%"
             outerRadius={300}
@@ -69,7 +69,7 @@ export const PieChartPR = ({
             label={renderCustomizedLabel}
             isAnimationActive={false}
           >
-            {mapData?.map((_, index) => (
+            {pieChartData?.map((_, index) => (
               <Cell fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
