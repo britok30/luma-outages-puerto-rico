@@ -19,7 +19,7 @@ const Home: NextPage = () => {
 
   const getRegionOutages = async () => {
     const res = await axios.get(
-      "https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService",
+      "https://cors-anywhere.herokuapp.com/https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService",
       {
         headers: {
           "Access-Control-Allow-Origin": "*",
@@ -35,7 +35,7 @@ const Home: NextPage = () => {
 
   const getTownOutages = async () => {
     const res = await axios.post(
-      "https://api.miluma.lumapr.com/miluma-outage-api/outage/municipality/towns",
+      "https://cors-anywhere.herokuapp.com/https://api.miluma.lumapr.com/miluma-outage-api/outage/municipality/towns",
       TOWNS,
       {
         headers: {
