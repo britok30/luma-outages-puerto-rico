@@ -2,12 +2,13 @@ import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { TOWNS } from "../towns";
-import { Regions, Totals, Towns } from "../types";
+import { News, Regions, Totals, Towns } from "../types";
 import { AreaChartPR } from "../components/AreaChartPR";
 import { TotalStatsPR } from "../components/TotalStatsPR";
 import { PieChartPR } from "../components/PieChartPR";
 import { Petitions } from "../components/Petitions";
 import { Footer } from "../components/Footer";
+import { NewsComponent } from "../components/NewsComponent";
 import { Seo } from "../components/Seo";
 import { toTitleCase } from "../utils";
 import HelpPR from "../components/HelpPR";
@@ -15,13 +16,16 @@ import HelpPR from "../components/HelpPR";
 const Home = ({
   outages,
   towns,
+  news,
 }: {
   outages: {
     regions: Regions[];
     totals: Totals;
   };
   towns: Towns;
+  news: News;
 }) => {
+  const { entries: newsEntries } = news;
   const pieChartData = useMemo(() => {
     const data =
       towns &&
@@ -55,6 +59,7 @@ const Home = ({
         </h2>
         <PieChartPR pieChartData={pieChartData} />
         <Petitions />
+        <NewsComponent newsEntries={newsEntries} />
         <HelpPR />
       </main>
       <Footer />
@@ -74,10 +79,23 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     TOWNS
   );
 
+  const { data: news } = await axios.get(
+    "https://google-search3.p.rapidapi.com/api/v1/news/q=puerto+rico+luma",
+    {
+      headers: {
+        "X-User-Agent": "desktop",
+        "X-Proxy-Location": "EU",
+        "X-RapidAPI-Key": "ad5d8d4b9fmsh6afde80d45081c7p106fb9jsnef296f3c0c38",
+        "X-RapidAPI-Host": "google-search3.p.rapidapi.com",
+      },
+    }
+  );
+
   return {
     props: {
       outages: outages,
       towns: data,
+      news: news,
     },
   };
 };
