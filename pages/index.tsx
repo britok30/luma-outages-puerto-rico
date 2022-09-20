@@ -42,7 +42,7 @@ const Home: NextPage = () => {
     getTownOutages();
   }, []);
 
-  const mapData = useMemo(() => {
+  const pieChartData = useMemo(() => {
     const data =
       towns &&
       Object.entries(towns).map(([key, value]) => {
@@ -76,7 +76,7 @@ const Home: NextPage = () => {
           Total Zones Affected Per Municipalities of Puerto Rico / Total Zonas
           Afectadas Por Municipios de Puerto Rico
         </h2>
-        <PieChartPR mapData={mapData} />
+        <PieChartPR pieChartData={pieChartData} />
         <Petitions />
       </main>
       <Footer />
