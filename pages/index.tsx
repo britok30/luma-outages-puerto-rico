@@ -69,7 +69,7 @@ const Home = ({
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const { data: outages } = await axios.get(
     "https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService"
   );
