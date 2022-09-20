@@ -109,7 +109,7 @@ const HelpPR = () => {
           <a
             target="_blank"
             rel="no_referrer"
-            className="text-blue-500 font-bold block mt-1text-xs md:text-sm"
+            className="text-blue-500 font-bold block mt-1 text-xs md:text-sm"
             href="https://fundly.com/prxpr"
           >
             Source
