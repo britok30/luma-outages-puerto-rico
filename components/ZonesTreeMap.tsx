@@ -61,13 +61,13 @@ const CustomizedContent = (props: any) => {
               ? colors[Math.floor((index / root.children.length) * 6)]
               : "none",
           stroke: "#fff",
-          strokeWidth: 2 / (depth + 1e-10),
+          strokeWidth: 1 / (depth + 1e-10),
           strokeOpacity: 1 / (depth + 1e-10),
         }}
       />
       {depth === 1 ? (
         <text
-          className="font-light text-sm"
+          className="text-sm font-thin"
           x={x + width / 2}
           y={y + height / 2 + 7}
           textAnchor="middle"
