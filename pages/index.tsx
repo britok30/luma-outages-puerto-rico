@@ -19,16 +19,16 @@ import { PovertyTreeMap } from '../components/PovertyTreeMap';
 const Home = ({
     outages,
     towns,
-    wages,
-    poverty,
+    // wages,
+    // poverty,
 }: {
     outages: {
         regions: Regions[];
         totals: Totals;
     };
     towns: Towns;
-    wages: Wages;
-    poverty: Poverty;
+    // wages: Wages;
+    // poverty: Poverty;
 }) => {
     const zonesData = useMemo(() => {
         const data =
@@ -89,7 +89,7 @@ const Home = ({
                 </h2>
                 <ZonesTreeMap zonesData={zonesData} />
 
-                <h2 className="text-xl md:text-2xl my-6">
+                {/* <h2 className="text-xl md:text-2xl my-6">
                     Wage Distribution in Puerto Rico | Distribución de Salarios
                     en Puerto Rico
                 </h2>
@@ -104,7 +104,7 @@ const Home = ({
                     classifies as impoverished. If a family's total income is
                     less than the family's threshold than that family and every
                     individual in it is considered to be living in poverty.
-                </p>
+                </p> */}
                 <HelpPR />
                 <Petitions />
             </main>
@@ -130,20 +130,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         TOWNS
     );
 
-    const { data: wages } = await axios.get(
-        'https://datausa.io/api/data?Geography=04000US72&measure=Total%20Population,Total%20Population%20MOE%20Appx,Record%20Count&drilldowns=Wage%20Bin&Workforce%20Status=true&Record%20Count>=5&year=latest'
-    );
+    // const { data: wages } = await axios.get(
+    //     'https://datausa.io/api/data?Geography=04000US72&measure=Total%20Population,Total%20Population%20MOE%20Appx,Record%20Count&drilldowns=Wage%20Bin&Workforce%20Status=true&Record%20Count>=5&year=latest'
+    // );
 
-    const { data: poverty } = await axios.get(
-        'https://datausa.io/api/data?Geography=04000US72&drilldowns=Age,Gender&measure=Poverty%20Population,Poverty%20Population%20Moe&Poverty%20Status=0&year=latest'
-    );
+    // const { data: poverty } = await axios.get(
+    //     'https://datausa.io/api/data?Geography=04000US72&drilldowns=Age,Gender&measure=Poverty%20Population,Poverty%20Population%20Moe&Poverty%20Status=0&year=latest'
+    // );
 
     return {
         props: {
             outages,
             towns,
-            wages,
-            poverty,
+            // wages,
+            // poverty,
         },
     };
 };
