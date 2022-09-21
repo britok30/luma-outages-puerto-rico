@@ -1,5 +1,5 @@
 import type { GetServerSideProps } from 'next';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import axios from 'axios';
 import { TOWNS } from '../towns';
 import { Poverty, Regions, Totals, Towns, Wages } from '../types';
@@ -15,21 +15,27 @@ import { ArrowDown } from 'react-feather';
 import { WageBarChart } from '../components/WageBarChart';
 import { ZonesTreeMap } from '../components/ZonesTreeMap';
 import { PovertyTreeMap } from '../components/PovertyTreeMap';
+import { Http2ServerResponse } from 'http2';
 
 const Home = ({
     outages,
     towns,
-}: // wages,
-// poverty,
-{
+    wages,
+    poverty,
+}: {
     outages: {
         regions: Regions[];
         totals: Totals;
     };
     towns: Towns;
-    // wages: Wages;
-    // poverty: Poverty;
+    wages: Wages;
+    poverty: Poverty;
 }) => {
+    const [hydrated, setHydrated] = useState<boolean>(false);
+    React.useEffect(() => {
+        setHydrated(true);
+    }, []);
+
     const zonesData = useMemo(() => {
         const data =
             towns &&
@@ -45,11 +51,13 @@ const Home = ({
         return data;
     }, [towns]);
 
+    if (!hydrated) {
+        // Returns null on first render, so the client and server match
+        return null;
+    }
+
     return (
-        <div
-            suppressHydrationWarning
-            className="flex w-full min-h-screen flex-col bg-black text-white items-center justify-center p-6 md:p-0"
-        >
+        <div className="flex w-full min-h-screen flex-col bg-black text-white items-center justify-center p-6 md:p-0">
             <Seo />
 
             <main className="flex w-full flex-col items-center justify-center text-center py-10">
@@ -93,7 +101,7 @@ const Home = ({
                 </h2>
                 <ZonesTreeMap zonesData={zonesData} />
 
-                {/* <h2 className="text-xl md:text-2xl my-6">
+                <h2 className="text-xl md:text-2xl my-6">
                     Wage Distribution in Puerto Rico | Distribución de Salarios
                     en Puerto Rico
                 </h2>
@@ -108,7 +116,7 @@ const Home = ({
                     classifies as impoverished. If a family's total income is
                     less than the family's threshold than that family and every
                     individual in it is considered to be living in poverty.
-                </p> */}
+                </p>
                 <HelpPR />
                 <Petitions />
             </main>
@@ -134,20 +142,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         TOWNS
     );
 
-    // const { data: wages } = await axios.get(
-    //     'https://datausa.io/api/data?Geography=04000US72&measure=Total%20Population,Total%20Population%20MOE%20Appx,Record%20Count&drilldowns=Wage%20Bin&Workforce%20Status=true&Record%20Count>=5&year=latest'
-    // );
+    const { data: wages } = await axios.get(
+        'https://datausa.io/api/data?Geography=04000US72&measure=Total%20Population,Total%20Population%20MOE%20Appx,Record%20Count&drilldowns=Wage%20Bin&Workforce%20Status=true&Record%20Count>=5&year=latest'
+    );
 
-    // const { data: poverty } = await axios.get(
-    //     'https://datausa.io/api/data?Geography=04000US72&drilldowns=Age,Gender&measure=Poverty%20Population,Poverty%20Population%20Moe&Poverty%20Status=0&year=latest'
-    // );
+    const { data: poverty } = await axios.get(
+        'https://datausa.io/api/data?Geography=04000US72&drilldowns=Age,Gender&measure=Poverty%20Population,Poverty%20Population%20Moe&Poverty%20Status=0&year=latest'
+    );
 
     return {
         props: {
             outages,
             towns,
-            // wages,
-            // poverty,
+            wages,
+            poverty,
         },
     };
 };
