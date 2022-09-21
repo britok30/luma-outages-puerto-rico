@@ -136,7 +136,7 @@ const Home = ({
             </BarChart>
           </ResponsiveContainer>
           <p className="text-xs text-gray-400">
-            Data from the {wageData.source[0].annotations.source_name}
+            Data from the {wageData.source[0].annotations.source_name}{" "}
             {wageData.source[0].annotations.dataset_name}
           </p>
         </div>
