@@ -10,7 +10,7 @@ export const TotalStatsPR = ({
     regions?: Regions[];
 }) => {
     return (
-        <div className="my-6 border rounded-lg p-4 md:w-1/3">
+        <div className="my-6 border rounded-lg p-4 md:w-2/3 lg:w-1/3">
             <h2 className="text-2xl md:text-4xl text-blue-500 mb-2">
                 Ahora en Puerto Rico
             </h2>

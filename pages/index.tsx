@@ -91,7 +91,7 @@ const Home = ({
                 <ZonesTreeMap zonesData={zonesData} />
 
                 <h2 className="text-xl md:text-2xl my-6">
-                    Wage Distribution in Puerto Rico | Distribución de salarios
+                    Wage Distribution in Puerto Rico | Distribución de Salarios
                     en Puerto Rico
                 </h2>
                 <WageBarChart wages={wages} />
@@ -99,6 +99,13 @@ const Home = ({
                     Poverty by Age and Sex | Pobreza por Edad y Sexo
                 </h2>
                 <PovertyTreeMap poverty={poverty} />
+                <p className="w-full md:w-2/3 lg:w-1/3 text-left text-xs mt-5">
+                    The Census Bureau uses a set of money income thresholds that
+                    vary by family size and composition to determine who
+                    classifies as impoverished. If a family's total income is
+                    less than the family's threshold than that family and every
+                    individual in it is considered to be living in poverty.
+                </p>
                 <HelpPR />
                 <Petitions />
             </main>

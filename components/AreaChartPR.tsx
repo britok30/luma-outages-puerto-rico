@@ -13,7 +13,7 @@ import { UpdatedOn } from './UpdatedOn';
 
 export const AreaChartPR = ({ regions }: { regions?: Regions[] }) => {
     return (
-        <div className="w-full h-[200px] md:w-2/3 md:h-[500px] mb-10">
+        <div className="w-full h-[200px] md:w-3/4 md:h-[500px] mb-10">
             <ResponsiveContainer>
                 <AreaChart
                     data={regions}
