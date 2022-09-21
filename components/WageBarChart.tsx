@@ -41,6 +41,7 @@ export const WageBarChart = ({ wages }: { wages: Wages }) => {
                     />
 
                     <Bar
+                        isAnimationActive={false}
                         yAxisId="left"
                         dataKey="Total Population"
                         fill="#82ca9d"

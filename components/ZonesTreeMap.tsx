@@ -33,6 +33,7 @@ export const ZonesTreeMap = ({
         <div className="w-full h-[700px] md:w-[80%] md:h-[700px] mb-10">
             <ResponsiveContainer>
                 <Treemap
+                    isAnimationActive={false}
                     nameKey="name"
                     data={zonesData}
                     dataKey="size"
