@@ -1,5 +1,4 @@
 import React from 'react';
-import { getCurrentDate } from '../utils';
 
 export const Footer = () => {
     return (
