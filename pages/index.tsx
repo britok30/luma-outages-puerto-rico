@@ -19,9 +19,9 @@ import { PovertyTreeMap } from '../components/PovertyTreeMap';
 const Home = ({
     outages,
     towns,
-    // wages,
-    // poverty,
-}: {
+}: // wages,
+// poverty,
+{
     outages: {
         regions: Regions[];
         totals: Totals;
@@ -70,6 +70,7 @@ const Home = ({
                             alt="hero-img-puerto-rico"
                             layout="fill"
                             objectFit="cover"
+                            priority={true}
                         />
                     </div>
                 </header>
