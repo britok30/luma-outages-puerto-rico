@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ResponsiveContainer, Tooltip, Treemap } from 'recharts';
 import { COLORS } from '../constants';
 import { useWindowSize } from '../hooks';
+import { Towns } from '../types';
+import { toTitleCase } from '../utils';
 import { UpdatedOn } from './UpdatedOn';
 
 interface CustomizedContentProps {
@@ -19,15 +21,23 @@ interface CustomizedContentProps {
     size: string;
 }
 
-export const ZonesTreeMap = ({
-    zonesData,
-}: {
-    zonesData: {
-        name: string;
-        size: number;
-    }[];
-}) => {
+export const ZonesTreeMap = ({ towns }: { towns: Towns }) => {
     const { width } = useWindowSize();
+
+    const zonesData = useMemo(() => {
+        const data =
+            towns &&
+            Object.entries(towns).map(([key, value]) => {
+                const obj = {
+                    name: toTitleCase(key),
+                    size: value.length,
+                };
+
+                return obj;
+            });
+
+        return data;
+    }, [towns]);
 
     return (
         <div className="w-full h-[700px] md:w-[80%] md:h-[700px] mb-10">

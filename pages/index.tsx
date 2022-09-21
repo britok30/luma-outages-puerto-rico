@@ -36,21 +36,6 @@ const Home = ({
         setHydrated(true);
     }, []);
 
-    const zonesData = useMemo(() => {
-        const data =
-            towns &&
-            Object.entries(towns).map(([key, value]) => {
-                const obj = {
-                    name: toTitleCase(key),
-                    size: value.length,
-                };
-
-                return obj;
-            });
-
-        return data;
-    }, [towns]);
-
     if (!hydrated) {
         // Returns null on first render, so the client and server match
         return null;
@@ -99,7 +84,7 @@ const Home = ({
                     Total Zones Affected Per Municipalities of Puerto Rico |
                     Total Zonas Afectadas Por Municipios de Puerto Rico
                 </h2>
-                <ZonesTreeMap zonesData={zonesData} />
+                <ZonesTreeMap towns={towns} />
 
                 <h2 className="text-xl md:text-2xl my-6">
                     Wage Distribution in Puerto Rico | Distribución de Salarios
