@@ -4,7 +4,7 @@ import Head from "next/head";
 export const Seo = () => {
   const pageTitle = "Power Outages in Puerto Rico | Apagones en Puerto Rico";
   const pageDesc =
-    "ApagonPuertoRico tracks, records, and aggregates power outages across Puerto Rico. ApogonPuertoRico rastrea, registra y agrega cortes de energía en todo Puerto Rico.";
+    "Apagon Puerto Rico tracks, records, and aggregates power outages across Puerto Rico. ApogonPuertoRico rastrea, registra y agrega cortes de energía en todo Puerto Rico.";
   const canonicalUrl = "https://apagonpuertorico.com";
   const twitterHandle = "@britoszn";
 
@@ -19,7 +19,7 @@ export const Seo = () => {
       <meta name="description" content={pageDesc} key="desc" />
       <meta
         name="keywords"
-        content="Puerto Rico, el apagon, apagones, power outages, luma"
+        content="Puerto Rico, el apagon, apagones, power outages, luma, hurricane, puerto rico"
       />
       <meta property="og:title" content={pageTitle} />
       <meta property="og:description" content={pageDesc} key="ogdesc" />
