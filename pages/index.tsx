@@ -14,11 +14,13 @@ import Image from "next/image";
 import { ArrowDown } from "react-feather";
 import { WageBarChart } from "../components/WageBarChart";
 import { ZonesTreeMap } from "../components/ZonesTreeMap";
+import { IncomeTreeMap } from "../components/IncomeTreeMap";
 
 const Home = ({
   outages,
   towns,
   wageData,
+  incomeData,
 }: {
   outages: {
     regions: Regions[];
@@ -27,6 +29,7 @@ const Home = ({
   towns: Towns;
   wageData: Wages;
 }) => {
+  console.log(incomeData);
   const zonesData = useMemo(() => {
     const data =
       towns &&
@@ -81,12 +84,12 @@ const Home = ({
         </h2>
         <ZonesTreeMap zonesData={zonesData} />
         <Petitions />
-
         <h2 className="text-xl md:text-2xl my-6">
           Wage Distribution in Puerto Rico | Distribución de salarios en Puerto
           Rico
         </h2>
         <WageBarChart wageData={wageData} />
+        <IncomeTreeMap incomeData={incomeData} />
         <HelpPR />
       </main>
       <Footer />
@@ -108,6 +111,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   const { data: wageData } = await axios.get(
     "https://datausa.io/api/data?Geography=04000US72&measure=Total%20Population,Total%20Population%20MOE%20Appx,Record%20Count&drilldowns=Wage%20Bin&Workforce%20Status=true&Record%20Count>=5&year=latest"
+  );
+
+  const { data: incomeData } = await axios.get(
+    "https://datausa.io/api/data?Geography=04000US72:children&measure=Household Income by Race,Household Income by Race Moe&drilldowns=Race"
   );
 
   return {

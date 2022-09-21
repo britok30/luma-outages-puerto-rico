@@ -1,5 +1,5 @@
 import React from "react";
-import { ResponsiveContainer, Treemap } from "recharts";
+import { ResponsiveContainer, Tooltip, Treemap } from "recharts";
 import { COLORS } from "../constants";
 import { useWindowSize } from "../hooks";
 
@@ -32,13 +32,21 @@ export const ZonesTreeMap = ({
     <div className="w-full h-[700px] md:w-[80%] md:h-[700px]">
       <ResponsiveContainer>
         <Treemap
+          nameKey="name"
           data={zonesData}
           dataKey="size"
           aspectRatio={width && width < 768 ? 1 / 2 : 4 / 3}
           stroke="#fff"
           fill="#8884d8"
           content={<CustomizedContent colors={COLORS} />}
-        />
+        >
+          <Tooltip
+            labelFormatter={(name) => name}
+            labelStyle={{
+              color: "#000",
+            }}
+          />
+        </Treemap>
       </ResponsiveContainer>
     </div>
   );
