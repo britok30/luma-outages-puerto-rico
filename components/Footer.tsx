@@ -17,9 +17,7 @@ export const Footer = () => {
             <div className="my-3 text-center text-xs">
                 <div className="text-blue-500 mb-2">
                     <p>© 2022 | Designed & built by Kelvin Brito</p>
-                    <p>
-                        Made with ❤️ with React, Next.js, TypeScript & Tailwind
-                    </p>
+                    <p>Made with ❤️ with Next.js, TypeScript, & Tailwind</p>
                 </div>
             </div>
         </footer>
