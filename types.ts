@@ -21,46 +21,38 @@ export interface ZoneArea {
   size?: number;
 }
 
-export interface News {
-  entries: NewsEntries[];
-  device_region: string;
-  device_type: string;
+export interface Wages {
+  data: WageData[];
+  source: Source[];
 }
 
-export interface NewsEntries {
-  title: string;
-  title_detail: {
-    type: string;
-    language: string | null;
-    base: string;
-    value: string;
+export interface WageData {
+  "ID Wage Bin": number;
+  "Wage Bin": string;
+  "ID Year": number;
+  Year: string;
+  "ID Workforce Status": boolean;
+  "Workforce Status": string | boolean;
+  "Total Population": number;
+  "Total Population MOE Appx": number;
+  "Record Count": number;
+  Geography: string;
+  "ID Geography": string;
+  "Slug Geography": string;
+}
+
+export interface Source {
+  measures: string[];
+  annotations: {
+    source_name: string;
+    source_description: string;
+    dataset_name: string;
+    dataset_link: string;
+    subtopic: string;
+    table_id: string;
+    topic: string;
+    hidden_measures: string;
   };
-  links: [
-    {
-      rel: string;
-      type: string;
-      href: string;
-    }
-  ];
-  link: string;
-  id: string;
-  guidislink: boolean;
-  published: string;
-  published_parsed: number[];
-  summary: string;
-  summary_detail: {
-    type: string;
-    language: string | null;
-    base: string;
-    value: string;
-  };
-  source: {
-    href: string;
-    title: string;
-  };
-  sub_articles: {
-    url: string;
-    title: string;
-    publisher: string;
-  }[];
+  name: string;
+  substitutions: any[];
 }

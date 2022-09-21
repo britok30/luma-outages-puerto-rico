@@ -10,22 +10,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { COLORS } from "../constants";
 
 export const BarChartPR = ({
   barChartData,
 }: {
   barChartData?: { name: string; size: number }[];
 }) => {
-  const COLORS = [
-    "#FA7070",
-    "#CD104D",
-    "#87A2FB",
-    "#8758FF",
-    "#AF0171",
-    "#F1A661",
-    "#FF1E00",
-  ];
-
   return (
     <div className="w-full h-[200px] md:w-3/4 md:h-[500px]">
       <ResponsiveContainer>

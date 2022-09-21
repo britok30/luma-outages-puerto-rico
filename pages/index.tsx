@@ -1,8 +1,8 @@
 import type { GetServerSideProps } from "next";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import axios from "axios";
 import { TOWNS } from "../towns";
-import { Regions, Totals, Towns } from "../types";
+import { Regions, Totals, Towns, Wages } from "../types";
 import { AreaChartPR } from "../components/AreaChartPR";
 import { TotalStatsPR } from "../components/TotalStatsPR";
 import { BarChartPR } from "../components/BarChartPR";
@@ -13,20 +13,33 @@ import { toTitleCase } from "../utils";
 import HelpPR from "../components/HelpPR";
 import Image from "next/image";
 import { ArrowDown } from "react-feather";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ComposedChart,
+  Legend,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { WAGE_COLORS } from "../constants";
 
 const Home = ({
   outages,
   towns,
-}: // news,
-{
+  wageData,
+}: {
   outages: {
     regions: Regions[];
     totals: Totals;
   };
   towns: Towns;
-  // news: News;
+  wageData: Wages;
 }) => {
-  // const { entries: newsEntries } = news;
   const barChartData = useMemo(() => {
     const data =
       towns &&
@@ -81,8 +94,53 @@ const Home = ({
         </h2>
         <BarChartPR barChartData={barChartData} />
         <Petitions />
-        {/* News Component was experimental and I have a limit on the API */}
-        {/* <NewsComponent newsEntries={newsEntries} /> */}
+
+        <h2 className="text-xl md:text-2xl my-6">
+          Wage Distribution in Puerto Rico | Distribución de salarios en Puerto
+          Rico
+        </h2>
+        <div className="w-full h-[200px] md:w-3/4 md:h-[500px]">
+          <ResponsiveContainer>
+            <BarChart
+              data={wageData.data}
+              margin={{
+                top: 20,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="Wage Bin" stroke="#FFC4C4" />
+              <YAxis
+                dataKey="Total Population"
+                yAxisId="left"
+                orientation="left"
+                stroke="#EE6983"
+              />
+              <Tooltip
+                cursor={false}
+                itemStyle={{
+                  color: "#EE6983",
+                }}
+              />
+
+              <Bar yAxisId="left" dataKey="Total Population" fill="#82ca9d">
+                {wageData.data?.map((_, index) => (
+                  <Cell
+                    key={index}
+                    fill={WAGE_COLORS[index % WAGE_COLORS.length]}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          <p className="text-xs text-gray-400">
+            Data from the {wageData.source[0].annotations.source_name}
+            {wageData.source[0].annotations.dataset_name}
+          </p>
+        </div>
+
         <HelpPR />
       </main>
       <Footer />
@@ -102,22 +160,15 @@ export const getServerSideProps: GetServerSideProps = async () => {
     TOWNS
   );
 
-  // const { data: news } = await axios.get(
-  //   "https://google-search3.p.rapidapi.com/api/v1/news/q=puerto+rico+luma",
-  //   {
-  //     headers: {
-  //       "X-User-Agent": "desktop",
-  //       "X-Proxy-Location": "EU",
-  //       "X-RapidAPI-Key": "ad5d8d4b9fmsh6afde80d45081c7p106fb9jsnef296f3c0c38",
-  //       "X-RapidAPI-Host": "google-search3.p.rapidapi.com",
-  //     },
-  //   }
-  // );
+  const { data: wageData } = await axios.get(
+    "https://datausa.io/api/data?Geography=04000US72&measure=Total%20Population,Total%20Population%20MOE%20Appx,Record%20Count&drilldowns=Wage%20Bin&Workforce%20Status=true&Record%20Count>=5&year=latest"
+  );
 
   return {
     props: {
       outages: outages,
       towns: data,
+      wageData,
     },
   };
 };
