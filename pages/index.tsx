@@ -30,7 +30,6 @@ const Home = ({
     wages: Wages;
     poverty: Poverty;
 }) => {
-    console.log(wages);
     const zonesData = useMemo(() => {
         const data =
             towns &&
