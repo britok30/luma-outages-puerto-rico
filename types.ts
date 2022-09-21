@@ -26,6 +26,27 @@ export interface Wages {
   source: Source[];
 }
 
+export interface Poverty {
+  data: PovertyData[];
+  source: Source[];
+}
+
+export interface PovertyData {
+  "ID Age": number;
+  Age: string;
+  "ID Gender": number;
+  Gender: string;
+  "ID Year": number;
+  Year: string;
+  "ID Poverty Status": number;
+  "Poverty Status": string;
+  "Poverty Population": number;
+  "Poverty Population Moe": number;
+  Geography: string;
+  "ID Geography": string;
+  "Slug Geography": string;
+}
+
 export interface WageData {
   "ID Wage Bin": number;
   "Wage Bin": string;

@@ -9,3 +9,11 @@ export const COLORS = [
 ];
 
 export const WAGE_COLORS = ["#850E35", "#EE6983", "#FFC4C4", "#9C2C77"];
+export const SECONDARY_COLORS = [
+  "#574AE2",
+  "#222A68",
+  "#654597",
+  "#AB81CD",
+  "#E2ADF2",
+  "#40376E",
+];

@@ -12,12 +12,12 @@ import {
 import { WAGE_COLORS } from "../constants";
 import { Wages } from "../types";
 
-export const WageBarChart = ({ wageData }: { wageData: Wages }) => {
+export const WageBarChart = ({ wages }: { wages: Wages }) => {
   return (
-    <div className="w-full h-[200px] md:w-3/4 md:h-[500px]">
+    <div className="w-full h-[200px] md:w-3/4 md:h-[500px] mb-10">
       <ResponsiveContainer>
         <BarChart
-          data={wageData.data}
+          data={wages.data}
           margin={{
             top: 20,
             right: 30,
@@ -41,7 +41,7 @@ export const WageBarChart = ({ wageData }: { wageData: Wages }) => {
           />
 
           <Bar yAxisId="left" dataKey="Total Population" fill="#82ca9d">
-            {wageData.data?.map((_, index) => (
+            {wages.data?.map((_, index) => (
               <Cell
                 key={index}
                 fill={WAGE_COLORS[index % WAGE_COLORS.length]}
@@ -51,8 +51,8 @@ export const WageBarChart = ({ wageData }: { wageData: Wages }) => {
         </BarChart>
       </ResponsiveContainer>
       <p className="text-xs text-gray-400">
-        Data from the {wageData.source[0].annotations.source_name}{" "}
-        {wageData.source[0].annotations.dataset_name}
+        Data from the {wages.source[0].annotations.source_name}{" "}
+        {wages.source[0].annotations.dataset_name}
       </p>
     </div>
   );

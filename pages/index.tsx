@@ -2,7 +2,7 @@ import type { GetServerSideProps } from "next";
 import React, { useMemo } from "react";
 import axios from "axios";
 import { TOWNS } from "../towns";
-import { Regions, Totals, Towns, Wages } from "../types";
+import { Poverty, Regions, Totals, Towns, Wages } from "../types";
 import { AreaChartPR } from "../components/AreaChartPR";
 import { TotalStatsPR } from "../components/TotalStatsPR";
 import { Petitions } from "../components/Petitions";
@@ -14,22 +14,22 @@ import Image from "next/image";
 import { ArrowDown } from "react-feather";
 import { WageBarChart } from "../components/WageBarChart";
 import { ZonesTreeMap } from "../components/ZonesTreeMap";
-import { IncomeTreeMap } from "../components/IncomeTreeMap";
+import { PovertyTreeMap } from "../components/PovertyTreeMap";
 
 const Home = ({
   outages,
   towns,
-  wageData,
-  incomeData,
+  wages,
+  poverty,
 }: {
   outages: {
     regions: Regions[];
     totals: Totals;
   };
   towns: Towns;
-  wageData: Wages;
+  wages: Wages;
+  poverty: Poverty;
 }) => {
-  console.log(incomeData);
   const zonesData = useMemo(() => {
     const data =
       towns &&
@@ -88,8 +88,11 @@ const Home = ({
           Wage Distribution in Puerto Rico | Distribución de salarios en Puerto
           Rico
         </h2>
-        <WageBarChart wageData={wageData} />
-        <IncomeTreeMap incomeData={incomeData} />
+        <WageBarChart wages={wages} />
+        <h2 className="text-xl md:text-2xl my-6">
+          Poverty by Age and Sex | Pobreza por Edad y Sexo
+        </h2>
+        <PovertyTreeMap poverty={poverty} />
         <HelpPR />
       </main>
       <Footer />
@@ -104,24 +107,25 @@ export const getServerSideProps: GetServerSideProps = async () => {
     "https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService"
   );
 
-  const { data } = await axios.post(
+  const { data: towns } = await axios.post(
     "https://api.miluma.lumapr.com/miluma-outage-api/outage/municipality/towns",
     TOWNS
   );
 
-  const { data: wageData } = await axios.get(
+  const { data: wages } = await axios.get(
     "https://datausa.io/api/data?Geography=04000US72&measure=Total%20Population,Total%20Population%20MOE%20Appx,Record%20Count&drilldowns=Wage%20Bin&Workforce%20Status=true&Record%20Count>=5&year=latest"
   );
 
-  const { data: incomeData } = await axios.get(
-    "https://datausa.io/api/data?Geography=04000US72:children&measure=Household Income by Race,Household Income by Race Moe&drilldowns=Race"
+  const { data: poverty } = await axios.get(
+    "https://datausa.io/api/data?Geography=04000US72&drilldowns=Age,Gender&measure=Poverty%20Population,Poverty%20Population%20Moe&Poverty%20Status=0&year=latest"
   );
 
   return {
     props: {
-      outages: outages,
-      towns: data,
-      wageData,
+      outages,
+      towns,
+      wages,
+      poverty,
     },
   };
 };
