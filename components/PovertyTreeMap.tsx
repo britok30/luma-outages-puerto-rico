@@ -35,14 +35,7 @@ export const PovertyTreeMap = ({ poverty }: { poverty: Poverty }) => {
                     stroke="#fff"
                     fill="#8884d8"
                     content={<CustomizedContent colors={SECONDARY_COLORS} />}
-                >
-                    <Tooltip
-                        labelFormatter={(name) => name}
-                        labelStyle={{
-                            color: '#000',
-                        }}
-                    />
-                </Treemap>
+                />
             </ResponsiveContainer>
 
             <p className="text-xs mt-5">

@@ -51,14 +51,7 @@ export const ZonesTreeMap = ({ towns }: { towns: Towns }) => {
                     stroke="#fff"
                     fill="#8884d8"
                     content={<CustomizedContent colors={COLORS} />}
-                >
-                    <Tooltip
-                        labelFormatter={(name) => name}
-                        labelStyle={{
-                            color: '#000',
-                        }}
-                    />
-                </Treemap>
+                />
             </ResponsiveContainer>
             <UpdatedOn />
         </div>
