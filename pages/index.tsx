@@ -14,6 +14,7 @@ import HelpPR from "../components/HelpPR";
 import Image from "next/image";
 import { ArrowDown } from "react-feather";
 import { WageBarChart } from "../components/WageBarChart";
+import { ZonesTreeMap } from "../components/ZonesTreeMap";
 
 const Home = ({
   outages,
@@ -27,7 +28,7 @@ const Home = ({
   towns: Towns;
   wageData: Wages;
 }) => {
-  const barChartData = useMemo(() => {
+  const zonesData = useMemo(() => {
     const data =
       towns &&
       Object.entries(towns).map(([key, value]) => {
@@ -79,7 +80,7 @@ const Home = ({
           Total Zones Affected Per Municipalities of Puerto Rico | Total Zonas
           Afectadas Por Municipios de Puerto Rico
         </h2>
-        <BarChartPR barChartData={barChartData} />
+        <ZonesTreeMap zonesData={zonesData} />
         <Petitions />
 
         <h2 className="text-xl md:text-2xl my-6">
