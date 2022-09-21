@@ -5,7 +5,6 @@ import { TOWNS } from "../towns";
 import { Regions, Totals, Towns, Wages } from "../types";
 import { AreaChartPR } from "../components/AreaChartPR";
 import { TotalStatsPR } from "../components/TotalStatsPR";
-import { BarChartPR } from "../components/BarChartPR";
 import { Petitions } from "../components/Petitions";
 import { Footer } from "../components/Footer";
 import { Seo } from "../components/Seo";
