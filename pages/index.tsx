@@ -46,7 +46,10 @@ const Home = ({
     }, [towns]);
 
     return (
-        <div className="flex w-full min-h-screen flex-col bg-black text-white items-center justify-center p-6 md:p-0">
+        <div
+            suppressHydrationWarning
+            className="flex w-full min-h-screen flex-col bg-black text-white items-center justify-center p-6 md:p-0"
+        >
             <Seo />
 
             <main className="flex w-full flex-col items-center justify-center text-center py-10">
