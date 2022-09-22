@@ -30,7 +30,7 @@ export const TotalStatsPR = ({
         </div>
         <div className="my-2 text-xs">
           <p className="text-red-400 text-xl md:text-2xl mb-1">
-            {puertoRicoData?.OutageCount || "-"}
+            {puertoRicoData?.OutageCount.toLocaleString() || "-"}
           </p>
           Total Clients Without Service by PowerOutage.US | Clientes Totales Sin
           Servicio por PowerOutage.US
