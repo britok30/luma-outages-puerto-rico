@@ -14,6 +14,15 @@ export const TotalStatsPR = ({
   const puertoRicoData = webStateRecords?.find(
     (record) => record.StateName === "Puerto Rico"
   );
+
+  const calculatePercentage = () => {
+    if (!puertoRicoData) return "-";
+
+    const calc =
+      (puertoRicoData.OutageCount / puertoRicoData.CustomerCount) * 100;
+
+    return `${calc.toFixed(0)}%`;
+  };
   return (
     <div className="my-6 border rounded-lg p-4 md:w-2/3 lg:w-1/3">
       <h2 className="text-2xl md:text-4xl text-blue-500 mb-2">
@@ -21,64 +30,41 @@ export const TotalStatsPR = ({
       </h2>
 
       <div className="text-lg font-light text-left grid grid-cols-1 md:grid-cols-2 md:gap-x-5">
-        <div className="my-2 text-xs">
-          <p className="text-red-400 text-xl md:text-2xl mb-1">
-            {totalStats?.totalClientsWithoutService.toLocaleString() || "-"}
-          </p>
-          Total Clients Without Service in Puerto Rico | Clientes Totales Sin
-          Servicio en Puerto Rico
-        </div>
-        <div className="my-2 text-xs">
-          <p className="text-red-400 text-xl md:text-2xl mb-1">
-            {puertoRicoData?.OutageCount.toLocaleString() || "-"}
-          </p>
-          Total Clients Without Service reported by{" "}
-          <a
-            className="underline"
-            href="https://poweroutage.us/area/state/puerto%20rico"
-          >
-            PowerOutage.US
-          </a>{" "}
-          | Clientes Totales Sin Servicio reportado por{" "}
-          <a
-            className="underline"
-            href="https://poweroutage.us/area/state/puerto%20rico"
-          >
-            PowerOutage.US
-          </a>
-        </div>
-        <div className="my-2 text-xs">
-          <p className="text-blue-500 text-xl md:text-2xl mb-1">
-            {totalStats?.totalClients.toLocaleString() || "-"}
-          </p>
-          Total Clients in Puerto Rico | Clientes Totales en Puerto Rico
-        </div>
-        <div className="my-2 text-xs">
-          <p className="text-red-400 text-xl md:text-2xl mb-1">
-            {puertoRicoData?.CustomerCount.toLocaleString() || "-"}
-          </p>
-          Total Clients in Puerto Rico reported by{" "}
-          <a
-            className="underline"
-            href="https://poweroutage.us/area/state/puerto%20rico"
-          >
-            PowerOutage.US
-          </a>{" "}
-          | Clientes Totales en Puerto Rico reportado por{" "}
-          <a
-            className="underline"
-            href="https://poweroutage.us/area/state/puerto%20rico"
-          >
-            PowerOutage.US
-          </a>
-        </div>
-        <div className="my-2 text-xs">
-          <p className="text-red-400 text-xl md:text-2xl mb-1">
-            {`${totalStats?.totalPercentage.toFixed(0)}%` || "-"}
-          </p>
-          Percentage of Clients without power in Puerto Rico | Porcentaje de
-          Clientes sin energía en Puerto Rico
-        </div>
+        <StatText
+          stat={totalStats?.totalClientsWithoutService.toLocaleString() || "-"}
+          text={
+            "Total Clients Without Service in Puerto Rico | Clientes Totales Sin Servicio en Puerto Rico"
+          }
+        />
+
+        <StatText
+          stat={puertoRicoData?.OutageCount.toLocaleString() || "-"}
+          text={
+            "Total Clients Without Service reported by PowerOutage.US | Clientes Totales Sin Servicio reportado por PowerOutage.US"
+          }
+        />
+
+        <StatText
+          stat={totalStats?.totalClients.toLocaleString() || "-"}
+          text={
+            "Total Clients in Puerto Rico | Clientes Totales en Puerto Rico"
+          }
+        />
+
+        <StatText
+          stat={`${totalStats?.totalPercentage.toFixed(0)}%` || "-"}
+          text={
+            "Percentage of Clients without power in Puerto Rico | Porcentaje de Clientes sin energía en Puerto Rico"
+          }
+        />
+
+        <StatText
+          stat={calculatePercentage()}
+          text={
+            "Percentage of Clients without power reported by PowerOutage.US | Porcentaje de Clientes sin energía reportado por PowerOutage.US"
+          }
+        />
+
         {regions?.map((region, index) => (
           <div key={index} className="my-2 text-xs">
             <p
@@ -99,6 +85,15 @@ export const TotalStatsPR = ({
         LUMA
       </p>
       <UpdatedOn />
+    </div>
+  );
+};
+
+const StatText = ({ stat, text }: { stat: number | string; text: string }) => {
+  return (
+    <div className="my-2 text-xs">
+      <p className="text-red-400 text-xl md:text-2xl mb-1">{stat}</p>
+      <p>{text}</p>
     </div>
   );
 };
