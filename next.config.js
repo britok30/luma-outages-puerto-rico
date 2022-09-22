@@ -5,12 +5,4 @@ module.exports = {
     locales: ["en", "es"],
     defaultLocale: "en",
   },
-  async rewrites() {
-    return [
-      {
-        source: "/sitemap.xml",
-        destination: "/api/sitemap",
-      },
-    ];
-  },
 };
