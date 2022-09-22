@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.apagonpuertorico.com/
+
+# Sitemaps
+Sitemap: https://www.apagonpuertorico.com/sitemap.xml
