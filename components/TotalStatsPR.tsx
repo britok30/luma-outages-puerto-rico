@@ -32,8 +32,20 @@ export const TotalStatsPR = ({
           <p className="text-red-400 text-xl md:text-2xl mb-1">
             {puertoRicoData?.OutageCount.toLocaleString() || "-"}
           </p>
-          Total Clients Without Service by PowerOutage.US | Clientes Totales Sin
-          Servicio por PowerOutage.US
+          Total Clients Without Service reported by{" "}
+          <a
+            className="underline"
+            href="https://poweroutage.us/area/state/puerto%20rico"
+          >
+            PowerOutage.US
+          </a>{" "}
+          | Clientes Totales Sin Servicio reportado por{" "}
+          <a
+            className="underline"
+            href="https://poweroutage.us/area/state/puerto%20rico"
+          >
+            PowerOutage.US
+          </a>
         </div>
         <div className="my-2 text-xs">
           <p className="text-blue-500 text-xl md:text-2xl mb-1">
