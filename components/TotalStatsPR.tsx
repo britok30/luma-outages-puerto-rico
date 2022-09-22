@@ -55,6 +55,25 @@ export const TotalStatsPR = ({
         </div>
         <div className="my-2 text-xs">
           <p className="text-red-400 text-xl md:text-2xl mb-1">
+            {puertoRicoData?.CustomerCount.toLocaleString() || "-"}
+          </p>
+          Total Clients in Puerto Rico reported by{" "}
+          <a
+            className="underline"
+            href="https://poweroutage.us/area/state/puerto%20rico"
+          >
+            PowerOutage.US
+          </a>{" "}
+          | Clientes Totales en Puerto Rico reportado por{" "}
+          <a
+            className="underline"
+            href="https://poweroutage.us/area/state/puerto%20rico"
+          >
+            PowerOutage.US
+          </a>
+        </div>
+        <div className="my-2 text-xs">
+          <p className="text-red-400 text-xl md:text-2xl mb-1">
             {`${totalStats?.totalPercentage.toFixed(0)}%` || "-"}
           </p>
           Percentage of Clients without power in Puerto Rico | Porcentaje de
@@ -75,6 +94,10 @@ export const TotalStatsPR = ({
           </div>
         ))}
       </div>
+      <p className="text-xs mt-5 font-light">
+        These numbers are based on the limited available information provided by
+        LUMA
+      </p>
       <UpdatedOn />
     </div>
   );
