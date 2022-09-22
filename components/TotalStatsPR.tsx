@@ -33,35 +33,35 @@ export const TotalStatsPR = ({
         <StatText
           stat={totalStats?.totalClientsWithoutService.toLocaleString() || "-"}
           text={
-            "Total Clients Without Service in Puerto Rico | Clientes Totales Sin Servicio en Puerto Rico"
+            "Total Clients Without Service in Puerto Rico (LUMA) | Clientes Totales Sin Servicio en Puerto Rico (LUMA)"
           }
         />
 
         <StatText
           stat={puertoRicoData?.OutageCount.toLocaleString() || "-"}
           text={
-            "Total Clients Without Service reported by PowerOutage.US | Clientes Totales Sin Servicio reportado por PowerOutage.US"
+            "Total Clients Without Service reported (PowerOutage.US) | Clientes Totales Sin Servicio (PowerOutage.US)"
           }
         />
 
         <StatText
           stat={totalStats?.totalClients.toLocaleString() || "-"}
           text={
-            "Total Clients in Puerto Rico | Clientes Totales en Puerto Rico"
+            "Total Clients in Puerto Rico (LUMA) | Clientes Totales en Puerto Rico (LUMA)"
           }
         />
 
         <StatText
           stat={`${totalStats?.totalPercentage.toFixed(0)}%` || "-"}
           text={
-            "Percentage of Clients without power in Puerto Rico | Porcentaje de Clientes sin energía en Puerto Rico"
+            "Percentage of Clients without power (LUMA) | Porcentaje de Clientes sin energía (LUMA)"
           }
         />
 
         <StatText
           stat={calculatePercentage()}
           text={
-            "Percentage of Clients without power reported by PowerOutage.US | Porcentaje de Clientes sin energía reportado por PowerOutage.US"
+            "Percentage of Clients without power (PowerOutage.US) | Porcentaje de Clientes sin energía (PowerOutage.US)"
           }
         />
 
