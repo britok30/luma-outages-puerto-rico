@@ -78,13 +78,11 @@ const Home = ({
           webStateRecords={power.WebStateRecord}
           regions={outages.regions}
         />
-
         <h2 className="text-xl md:text-2xl my-6">
           Total Zones Affected Per Municipalities of Puerto Rico | Total Zonas
           Afectadas Por Municipios de Puerto Rico
         </h2>
         <ZonesTreeMap towns={towns} />
-
         <h2 className="text-xl md:text-2xl my-6">
           Wage Distribution in Puerto Rico | Distribución de Salarios en Puerto
           Rico
@@ -100,6 +98,13 @@ const Home = ({
           impoverished. If a family's total income is less than the family's
           threshold than that family and every individual in it is considered to
           be living in poverty.
+        </p>
+        <p className="w-full md:w-2/3 lg:w-1/3 text-left text-xs mt-5">
+          La Oficina del Censo utiliza un conjunto de umbrales de ingresos
+          monetarios que varían según el tamaño y la composición de la familia
+          para determinar quién se clasifica como empobrecido. Si el ingreso
+          total de una familia es menor que el umbral de la familia, se
+          considera que esa familia y todos sus miembros viven en la pobreza.
         </p>
         <HelpPR />
         <Petitions />

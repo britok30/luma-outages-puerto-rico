@@ -65,7 +65,7 @@ const HelpPR = () => {
           </p>
 
           <p className="mt-2 font-light text-gray-400 hover:text-white transition duration-200 ease-in-out">
-            Taller Salud, a women-led, nonprofit organization based in Loíza,
+            Taller Salud, a women-led, non-profit organization based in Loíza,
             Puerto Rico, is accepting donations of non-perishable food,
             disposable containers, gallons of water, adult and baby diapers, and
             more. The group also accepts cash donations through PayPal and some
@@ -111,8 +111,8 @@ const HelpPR = () => {
           </p>
 
           <p className="mt-2 font-light text-gray-400 hover:text-white transition duration-200 ease-in-out">
-            Global Giving a nonprofit organization that supports and connects
-            other nonprofits with donors, launched the "Hurricane Fiona Relief
+            Global Giving a non-profit organization that supports and connects
+            other non-profits with donors, launched the "Hurricane Fiona Relief
             Fund," with the goal of raising $1 million to help residents of the
             island and other communities throughout the Caribbean
           </p>
