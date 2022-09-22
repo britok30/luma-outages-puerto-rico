@@ -31,6 +31,17 @@ export interface Poverty {
   source: Source[];
 }
 
+export type Power = {
+  WebStateRecord: WebStateRecord[];
+};
+
+export type WebStateRecord = {
+  StateName: string;
+  StateStatus: string;
+  OutageCount: number;
+  CustomerCount: number;
+};
+
 export interface PovertyData {
   "ID Age": number;
   Age: string;

@@ -13,7 +13,7 @@ export const Seo = () => {
       <title>{pageTitle}</title>
       <link rel="icon" href="/favicon.ico" />
       <meta charSet="utf-8" />
-      <meta content="Kelvin Brito" name="author" />
+      <meta content="Brito" name="author" />
       <meta name="theme-color" content="#000000" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="description" content={pageDesc} key="desc" />
