@@ -40,7 +40,7 @@ export const ZonesTreeMap = ({ towns }: { towns: Towns }) => {
     }, [towns]);
 
     return (
-        <div className="w-full h-[700px] md:w-[80%] md:h-[700px] mb-10">
+        <div className="w-full h-[700px] md:w-[80%] md:h-[700px] mb-20 md:mb-10">
             <ResponsiveContainer>
                 <Treemap
                     isAnimationActive={false}
