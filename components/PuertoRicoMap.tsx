@@ -3,8 +3,6 @@ import React, { useCallback, useState, useMemo, useEffect } from "react";
 import Map, { Layer, Source } from "react-map-gl";
 import RegionsJSON from "../pages/api/puerto-rico.json";
 import { Regions } from "../types";
-import { useDebouncedCallback } from "use-debounce";
-import { useWindowSize } from "../hooks";
 
 interface HoverInfo {
   x: number;
