@@ -17,3 +17,7 @@
 .recharts-tooltip-item {
   @apply whitespace-pre-wrap;
 }
+
+.mapboxgl-ctrl-attrib-inner {
+  display: none !important;
+}
