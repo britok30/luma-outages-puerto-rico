@@ -69,6 +69,11 @@ const Home = ({
             />
           </div>
         </header>
+        <TotalStatsPR
+          totalStats={outages.totals}
+          webStateRecords={power.WebStateRecord}
+          regions={outages.regions}
+        />
         <PuertoRicoMap regions={outages.regions} />
         <>
           <h2 className="text-xl md:text-2xl mt-14 mb-4">
@@ -76,11 +81,6 @@ const Home = ({
             Reportado por LUMA
           </h2>
           <AreaChartPR regions={outages.regions} />
-          <TotalStatsPR
-            totalStats={outages.totals}
-            webStateRecords={power.WebStateRecord}
-            regions={outages.regions}
-          />
         </>
 
         <>

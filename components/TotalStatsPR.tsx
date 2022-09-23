@@ -15,7 +15,7 @@ export const TotalStatsPR = ({
     (record) => record.StateName === "Puerto Rico"
   );
 
-  const calculatePercentage = () => {
+  const getWithoutPowerPercentage = () => {
     if (!puertoRicoData) return "-";
 
     const calc =
@@ -23,8 +23,29 @@ export const TotalStatsPR = ({
 
     return `${calc.toFixed(0)}%`;
   };
+
+  const getPowerPercentageLuma = () => {
+    if (!totalStats) return "-";
+
+    const totalClients = totalStats.totalClients;
+    const withoutPower = totalStats.totalClientsWithoutService;
+    const calc = ((totalClients - withoutPower) / totalClients) * 100;
+
+    return `${calc.toFixed(0)}%`;
+  };
+
+  const getPowerPercentagePO = () => {
+    if (!puertoRicoData) return "-";
+
+    const totalClients = puertoRicoData.CustomerCount;
+    const withoutPower = puertoRicoData.OutageCount;
+    const calc = ((totalClients - withoutPower) / totalClients) * 100;
+
+    return `${calc.toFixed(0)}%`;
+  };
+
   return (
-    <div className="my-6 border rounded-lg p-4 md:w-2/3 lg:w-1/3">
+    <div className="mb-10 border rounded-lg p-4 md:w-2/3 lg:w-1/3">
       <h2 className="text-2xl md:text-4xl text-blue-500 mb-2">
         Ahora en Puerto Rico
       </h2>
@@ -45,9 +66,16 @@ export const TotalStatsPR = ({
         />
 
         <StatText
-          stat={totalStats?.totalClients.toLocaleString() || "-"}
+          stat={getPowerPercentageLuma()}
           text={
-            "Total Clients in Puerto Rico (LUMA) | Clientes Totales en Puerto Rico (LUMA)"
+            "Total Clients With Service (LUMA) | Clientes Totales Con Servicio (LUMA)"
+          }
+        />
+
+        <StatText
+          stat={getPowerPercentagePO()}
+          text={
+            "Total Clients With Service (PowerOutage.US) | Clientes Totales Con Servicio (PowerOutage.US)"
           }
         />
 
@@ -59,7 +87,7 @@ export const TotalStatsPR = ({
         />
 
         <StatText
-          stat={calculatePercentage()}
+          stat={getWithoutPowerPercentage()}
           text={
             "Percentage of Clients without power (PowerOutage.US) | Porcentaje de Clientes sin energía (PowerOutage.US)"
           }
@@ -79,6 +107,13 @@ export const TotalStatsPR = ({
             {`Percentage of Clients without power in ${region.name} | Porcentaje de Clientes sin energía en ${region.name}`}
           </div>
         ))}
+
+        <StatText
+          stat={totalStats?.totalClients.toLocaleString() || "-"}
+          text={
+            "Total Clients in Puerto Rico | Clientes Totales en Puerto Rico"
+          }
+        />
       </div>
       <p className="text-xs mt-5 font-light">
         These numbers are based on the limited available information provided by
