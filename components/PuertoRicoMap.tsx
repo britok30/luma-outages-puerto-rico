@@ -103,26 +103,28 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
               "line-width": 1,
             }}
           />
-          {hoverInfo && (
-            <div
-              className="absolute bg-black top-0 left-[50%] border-white text-white p-2 rounded-lg text-left"
-              style={{
-                transform: "translate(-50%,10%)",
-                backfaceVisibility: "hidden",
-              }}
-            >
-              <div>Region: {hoverInfo.feature.properties?.name}</div>
-              <div>
-                Total Clients: {hoverInfo.feature.properties?.totalClients}
-              </div>
-              <div>
-                Clients Without Service:{" "}
-                {hoverInfo.feature.properties?.totalClientsWithoutService}
-              </div>
-            </div>
-          )}
+          {hoverInfo && <Tooltip hoverInfo={hoverInfo} />}
         </Source>
       </Map>
+    </div>
+  );
+};
+
+const Tooltip = ({ hoverInfo }: { hoverInfo: HoverInfo }) => {
+  return (
+    <div
+      className="absolute bg-black top-0 left-[50%] border-white text-white p-2 rounded-lg text-left"
+      style={{
+        transform: "translate(-50%,10%)",
+        backfaceVisibility: "hidden",
+      }}
+    >
+      <div>Region: {hoverInfo.feature.properties?.name}</div>
+      <div>Total Clients: {hoverInfo.feature.properties?.totalClients}</div>
+      <div>
+        Clients Without Service:{" "}
+        {hoverInfo.feature.properties?.totalClientsWithoutService}
+      </div>
     </div>
   );
 };

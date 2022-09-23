@@ -71,7 +71,7 @@ const Home = ({
         </header>
         <PuertoRicoMap regions={outages.regions} />
         <>
-          <h2 className="text-xl md:text-2xl mt-10 mb-4">
+          <h2 className="text-xl md:text-2xl mt-14 mb-4">
             Service Interruptions Reported by LUMA | Interrupciones de Servicio
             Reportado por LUMA
           </h2>
