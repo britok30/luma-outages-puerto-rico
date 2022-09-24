@@ -68,28 +68,28 @@ export const TotalStatsPR = ({
         <StatText
           stat={getPowerPercentageLuma()}
           text={
-            "Total Clients With Service (LUMA) | Clientes Totales Con Servicio (LUMA)"
+            "Percentage of Clients With Service (LUMA) | Porcentaje de Clientes Con Servicio (LUMA)"
           }
         />
 
         <StatText
           stat={getPowerPercentagePO()}
           text={
-            "Total Clients With Service (PowerOutage.US) | Clientes Totales Con Servicio (PowerOutage.US)"
+            "Percentage of Clients With Service (PowerOutage.US) | Porcentaje de Clientes Con Servicio (PowerOutage.US)"
           }
         />
 
         <StatText
           stat={`${totalStats?.totalPercentage.toFixed(0)}%` || "-"}
           text={
-            "Percentage of Clients without power (LUMA) | Porcentaje de Clientes sin energía (LUMA)"
+            "Percentage of Clients Without Service (LUMA) | Porcentaje de Clientes Con Servicio (LUMA)"
           }
         />
 
         <StatText
           stat={getWithoutPowerPercentage()}
           text={
-            "Percentage of Clients without power (PowerOutage.US) | Porcentaje de Clientes sin energía (PowerOutage.US)"
+            "Percentage of Clients Without Service (PowerOutage.US) | Porcentaje de Clientes Con Servicio (PowerOutage.US)"
           }
         />
 
