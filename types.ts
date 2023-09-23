@@ -8,7 +8,9 @@ export interface Regions {
 export interface Totals {
   totalClientsWithoutService: number;
   totalClients: number;
-  totalPercentage: number;
+  totalClientsWithService: number;
+  totalPercentageWithoutService: number;
+  totalPercentageWithService: number;
 }
 
 export interface Towns {

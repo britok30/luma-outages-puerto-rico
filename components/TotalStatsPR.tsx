@@ -20,16 +20,25 @@ export const TotalStatsPR = ({
 
     const lumaTotalClients = totalStats.totalClients;
     const lumaWithoutEnergy = totalStats.totalClientsWithoutService;
-    const lumaWithoutEnergyPercentage = totalStats.totalPercentage;
-    const lumaWithEnergy = lumaTotalClients - lumaWithoutEnergy;
-    const lumaWithEnergyPercentage = (lumaWithEnergy / lumaTotalClients) * 100;
+    const lumaWithoutEnergyPercentage =
+      totalStats.totalPercentageWithoutService;
+    const lumaWithEnergy = totalStats.totalClientsWithService;
+    const lumaWithEnergyPercentage = totalStats.totalPercentageWithService;
 
     const pOUSTotalClients = puertoRicoData.CustomerCount;
+
     const pOUSWithoutEnergy = puertoRicoData.OutageCount;
-    const pOUSWithoutEnergyPercentage =
-      (pOUSWithoutEnergy / pOUSTotalClients) * 100;
+
+    const pOUSWithoutEnergyPercentage = isNaN(
+      pOUSWithoutEnergy / pOUSTotalClients
+    )
+      ? 0
+      : (pOUSWithoutEnergy / pOUSTotalClients) * 100;
+
     const pOUSWithEnergy = pOUSTotalClients - pOUSWithoutEnergy;
-    const pOUSWithEnergyPercentage = (pOUSWithEnergy / pOUSTotalClients) * 100;
+    const pOUSWithEnergyPercentage = isNaN(pOUSWithoutEnergy / pOUSTotalClients)
+      ? 0
+      : (pOUSWithEnergy / pOUSTotalClients) * 100;
 
     return {
       lumaTotalClients,
@@ -82,7 +91,7 @@ export const TotalStatsPR = ({
 
         <StatText
           stat={
-            `${energyStats()?.lumaWithoutEnergyPercentage.toFixed(0)}%` || "-"
+            `${energyStats()?.lumaWithoutEnergyPercentage?.toFixed(0)}%` || "-"
           }
           text={
             "Percentage of Clients Without Service (LUMA) | Porcentaje de Clientes Sin Servicio (LUMA)"
