@@ -1,7 +1,7 @@
 import React from "react";
 import { getCurrentDate } from "../utils";
 
-export const UpdatedOn = () => {
+export const UpdatedOn = ({ timestamp }: { timestamp?: string }) => {
   return (
     <div className="text-xs mt-5 flex flex-col md:flex-row justify-center space-x-3">
       <a
@@ -12,15 +12,7 @@ export const UpdatedOn = () => {
       >
         Original Data Source
       </a>
-      <a
-        className="underline"
-        href="https://poweroutage.us/area/state/puerto%20rico"
-        target="_blank"
-        rel="no_referrer"
-      >
-        PowerOutage.US Data
-      </a>
-      <p className="font-light">{getCurrentDate()}</p>
+      {timestamp && <p className="font-light">Updated on: {timestamp}</p>}
     </div>
   );
 };

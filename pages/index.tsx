@@ -26,6 +26,7 @@ const Home = ({
   outages: {
     regions: Regions[];
     totals: Totals;
+    timestamp: string;
   };
   towns: Towns;
   wages: Wages;
@@ -73,6 +74,7 @@ const Home = ({
           totalStats={outages.totals}
           webStateRecords={power.WebStateRecord}
           regions={outages.regions}
+          timestamp={outages.timestamp}
         />
         <PuertoRicoMap regions={outages.regions} />
         <>
@@ -130,11 +132,6 @@ const Home = ({
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=10, stale-while-revalidate=59"
-  );
-
   const { data: outages } = await axios.get(
     "https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService"
   );

@@ -15,7 +15,7 @@ export const Footer = () => {
             </div>
             <div className="my-3 text-center text-xs">
                 <div className="text-blue-500 mb-2">
-                    <p>© 2024 | Designed & built by Brito</p>
+                    <p>© {new Date().getFullYear()} | Designed & built by Brito</p>
                     <p>Made with ❤️ with Next.js,TypeScript, & Tailwind</p>
                 </div>
             </div>

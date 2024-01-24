@@ -1,15 +1,19 @@
 import React from "react";
 import { Regions, Totals, WebStateRecord } from "../types";
 import { UpdatedOn } from "./UpdatedOn";
+import { CSVLink, CSVDownload } from "react-csv";
+import { getCurrentDate } from "../utils";
 
 export const TotalStatsPR = ({
   totalStats,
   regions,
   webStateRecords,
+  timestamp,
 }: {
   totalStats?: Totals;
   regions?: Regions[];
   webStateRecords?: WebStateRecord[];
+  timestamp: string;
 }) => {
   const puertoRicoData = webStateRecords?.find(
     (record) => record.StateName === "Puerto Rico"
@@ -25,41 +29,40 @@ export const TotalStatsPR = ({
     const lumaWithEnergy = totalStats.totalClientsWithService;
     const lumaWithEnergyPercentage = totalStats.totalPercentageWithService;
 
-    const pOUSTotalClients = puertoRicoData.CustomerCount;
-
-    const pOUSWithoutEnergy = puertoRicoData.OutageCount;
-
-    const pOUSWithoutEnergyPercentage = isNaN(
-      pOUSWithoutEnergy / pOUSTotalClients
-    )
-      ? 0
-      : (pOUSWithoutEnergy / pOUSTotalClients) * 100;
-
-    const pOUSWithEnergy = pOUSTotalClients - pOUSWithoutEnergy;
-    const pOUSWithEnergyPercentage = isNaN(pOUSWithoutEnergy / pOUSTotalClients)
-      ? 0
-      : (pOUSWithEnergy / pOUSTotalClients) * 100;
-
     return {
       lumaTotalClients,
       lumaWithoutEnergy,
       lumaWithoutEnergyPercentage,
       lumaWithEnergy,
       lumaWithEnergyPercentage,
-      pOUSTotalClients,
-      pOUSWithoutEnergy,
-      pOUSWithoutEnergyPercentage,
-      pOUSWithEnergy,
-      pOUSWithEnergyPercentage,
+      timestamp,
     };
   };
+
+  const csvData = [
+    [
+      "Timestamp",
+      "Total Clients Without Energy (LUMA)",
+      "Total Clients With Energy (LUMA)",
+      "Percentage of Clients Without Energy (LUMA)",
+      "Percentage of Clients With Energy (LUMA)",
+      "Total Clients (LUMA)",
+    ],
+    [
+      `${timestamp}`,
+      `${energyStats()?.lumaWithoutEnergy.toLocaleString()}`,
+      `${energyStats()?.lumaWithEnergy.toLocaleString()}`,
+      `${energyStats()?.lumaWithoutEnergyPercentage?.toFixed(0)}%`,
+      `${energyStats()?.lumaWithEnergyPercentage?.toFixed(0)}%`,
+      `${energyStats()?.lumaTotalClients.toLocaleString()}`,
+    ],
+  ];
 
   return (
     <div className="mb-10 border rounded-lg p-4 md:w-2/3">
       <h2 className="text-2xl md:text-4xl text-blue-500 mb-2">
         Ahora en Puerto Rico
       </h2>
-
       <div className="text-lg font-light text-left grid grid-cols-1 md:grid-cols-2 md:gap-x-5">
         <StatText
           stat={energyStats()?.lumaWithoutEnergy.toLocaleString() || "-"}
@@ -69,23 +72,9 @@ export const TotalStatsPR = ({
         />
 
         <StatText
-          stat={energyStats()?.pOUSWithoutEnergy.toLocaleString() || "-"}
-          text={
-            "Total Clients Without Service (PowerOutage.US) | Clientes Totales Sin Servicio (PowerOutage.US)"
-          }
-        />
-
-        <StatText
           stat={energyStats()?.lumaWithEnergy.toLocaleString() || "-"}
           text={
             "Total Clients With Service (LUMA) | Clientes Totales Sin Servicio (LUMA)"
-          }
-        />
-
-        <StatText
-          stat={energyStats()?.pOUSWithEnergy.toLocaleString() || "-"}
-          text={
-            "Total Clients With Service (PowerOutage.US) | Clientes Totales Con Servicio (PowerOutage.US)"
           }
         />
 
@@ -99,25 +88,9 @@ export const TotalStatsPR = ({
         />
 
         <StatText
-          stat={
-            `${energyStats()?.pOUSWithoutEnergyPercentage.toFixed(0)}%` || "-"
-          }
-          text={
-            "Percentage of Clients Without Service (PowerOutage.US) | Porcentaje de Clientes Sin Servicio (PowerOutage.US)"
-          }
-        />
-
-        <StatText
           stat={`${energyStats()?.lumaWithEnergyPercentage.toFixed(0)}%` || "-"}
           text={
             "Percentage of Clients With Service (LUMA) | Porcentaje de Clientes Con Servicio (LUMA)"
-          }
-        />
-
-        <StatText
-          stat={`${energyStats()?.pOUSWithEnergyPercentage.toFixed(0)}%` || "-"}
-          text={
-            "Percentage of Clients With Service (PowerOutage.US) | Porcentaje de Clientes Con Servicio (PowerOutage.US)"
           }
         />
 
@@ -145,9 +118,16 @@ export const TotalStatsPR = ({
       </div>
       <p className="text-xs mt-5 font-light">
         These numbers are based on the limited available information provided by
-        LUMA and PowerOutage.US. They are rough estimates.
+        LUMA. They are rough estimates.
       </p>
-      <UpdatedOn />
+      <UpdatedOn timestamp={timestamp} />
+      <CSVLink
+        filename={"luma-data.csv"}
+        className="text-sm underline"
+        data={csvData}
+      >
+        Download CSV
+      </CSVLink>
     </div>
   );
 };

@@ -12,7 +12,7 @@ export const getCurrentDate = () => {
     day: "numeric",
   });
 
-  return `Updated on: ${date}`;
+  return date;
 };
 
 export const formatTitle = (title: string) => {
