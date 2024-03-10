@@ -7,20 +7,14 @@ import { getCurrentDate } from "../utils";
 export const TotalStatsPR = ({
   totalStats,
   regions,
-  webStateRecords,
   timestamp,
 }: {
   totalStats?: Totals;
   regions?: Regions[];
-  webStateRecords?: WebStateRecord[];
   timestamp: string;
 }) => {
-  const puertoRicoData = webStateRecords?.find(
-    (record) => record.StateName === "Puerto Rico"
-  );
-
   const energyStats = () => {
-    if (!totalStats || !puertoRicoData) return;
+    if (!totalStats) return;
 
     const lumaTotalClients = totalStats.totalClients;
     const lumaWithoutEnergy = totalStats.totalClientsWithoutService;

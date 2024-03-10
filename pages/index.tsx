@@ -2,7 +2,7 @@ import type { GetServerSideProps } from "next";
 import React, { useMemo, useState } from "react";
 import axios from "axios";
 import { TOWNS } from "../towns";
-import { Poverty, Power, Regions, Totals, Towns, Wages } from "../types";
+import { Poverty, Regions, Totals, Towns, Wages } from "../types";
 import { AreaChartPR } from "../components/AreaChartPR";
 import { TotalStatsPR } from "../components/TotalStatsPR";
 import { Petitions } from "../components/Petitions";
@@ -21,7 +21,6 @@ const Home = ({
   towns,
   wages,
   poverty,
-  power,
 }: {
   outages: {
     regions: Regions[];
@@ -31,7 +30,6 @@ const Home = ({
   towns: Towns;
   wages: Wages;
   poverty: Poverty;
-  power: Power;
 }) => {
   const [hydrated, setHydrated] = useState<boolean>(false);
   React.useEffect(() => {
@@ -72,7 +70,6 @@ const Home = ({
         </header>
         <TotalStatsPR
           totalStats={outages.totals}
-          webStateRecords={power.WebStateRecord}
           regions={outages.regions}
           timestamp={outages.timestamp}
         />
@@ -149,17 +146,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     "https://datausa.io/api/data?Geography=04000US72&drilldowns=Age,Gender&measure=Poverty%20Population,Poverty%20Population%20Moe&Poverty%20Status=0&year=latest"
   );
 
-  const { data: power } = await axios.get(
-    "https://poweroutage.us/api/web/states?key=23786238976131&countryid=us"
-  );
-
   return {
     props: {
       outages,
       towns,
       wages,
       poverty,
-      power,
     },
   };
 };

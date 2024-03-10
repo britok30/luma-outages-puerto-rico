@@ -33,10 +33,6 @@ export interface Poverty {
   source: Source[];
 }
 
-export type Power = {
-  WebStateRecord: WebStateRecord[];
-};
-
 export type WebStateRecord = {
   StateName: string;
   StateStatus: string;
