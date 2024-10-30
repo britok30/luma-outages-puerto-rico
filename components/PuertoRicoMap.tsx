@@ -1,8 +1,10 @@
+"use client";
+
 import { Feature } from "geojson";
-import React, { useCallback, useState, useMemo, useEffect } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import Map, { Layer, Source } from "react-map-gl";
-import RegionsJSON from "../pages/api/puerto-rico.json";
-import { Regions } from "../types";
+import RegionsJSON from "../lib/puerto-rico.json";
+import { Regions } from "../lib/types";
 
 interface HoverInfo {
   x: number;
@@ -12,6 +14,7 @@ interface HoverInfo {
 
 export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
+
   const onHover = useCallback((event: mapboxgl.MapLayerMouseEvent) => {
     event.originalEvent.preventDefault();
     event.originalEvent.stopPropagation();
@@ -23,6 +26,8 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
 
     if (hoveredFeature) {
       setHoverInfo({ feature: hoveredFeature, x, y });
+    } else {
+      setHoverInfo(null);
     }
   }, []);
 
@@ -35,12 +40,12 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
       features: features.map((f, index) => {
         const properties = {
           ...f.properties,
-          totalClients: regions[index].totalClients,
-          totalClientsWithoutService: regions[index].totalClientsWithoutService,
+          totalClients: regions[index]?.totalClients || 0,
+          totalClientsWithoutService:
+            regions[index]?.totalClientsWithoutService || 0,
           percentageClientsWithoutService:
-            regions[index].totalClientsWithoutService,
+            regions[index]?.percentageClientsWithoutService || 0,
         };
-
         return { ...f, properties };
       }),
     };
@@ -54,22 +59,22 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
 
   return (
     <div className="w-full md:w-2/3 h-[400px] md:h-[600px] mb-20 relative">
-      <div className="mb-5">
+      <div className="mb-5 text-center">
         <h2 className="text-2xl md:text-4xl mb-2 text-blue-500">
           Puerto Rico Map - Region Outages
         </h2>
         <p className="text-xs md:text-sm">
-          Hover (click on mobile) on region to see stats
+          Hover (or tap on mobile) over a region to view statistics.
         </p>
       </div>
       <Map
         initialViewState={{
           longitude: -66.664513,
           latitude: 18.200178,
-          zoom: 8,
+          zoom: 7.5,
         }}
         scrollZoom={false}
-        mapStyle="mapbox://styles/mapbox/dark-v10"
+        mapStyle="mapbox://styles/mapbox/light-v11"
         mapboxAccessToken="pk.eyJ1IjoiYnJpdG9rMzAiLCJhIjoiY2w4ZG40MHkzMDg0aDN4cDFxc2Y4eXEwYyJ9.kVaP2RxtBe-fbzr04Pchjw"
         onMouseMove={onHover}
         interactiveLayerIds={["fillLayer"]}
@@ -80,16 +85,8 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
             type="fill"
             source="puerto-rico"
             paint={{
-              "fill-color": {
-                property: "totalClientsWithoutService",
-                stops: [
-                  [150000, "#BA324F"],
-                  [170000, "#4BA3C3"],
-                  [190000, "#D62839"],
-                  [210000, "#175676"],
-                ],
-              },
-              "fill-opacity": 0.6,
+              "fill-color": "#4BA3C3", // Light blue color to make regions visible and compatible with the ocean color
+              "fill-opacity": 0.4, // Lower opacity to show map background
             }}
           />
           <Layer
@@ -97,7 +94,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
             type="line"
             source="puerto-rico"
             paint={{
-              "line-color": "#000",
+              "line-color": "#333",
               "line-width": 1,
             }}
           />
@@ -111,18 +108,28 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
 const Tooltip = ({ hoverInfo }: { hoverInfo: HoverInfo }) => {
   return (
     <div
-      className="absolute bg-black top-0 left-[50%] border-white text-white p-2 rounded-lg text-left"
+      className="absolute bg-white text-gray-800 p-2 rounded-lg shadow-lg text-left"
       style={{
-        transform: "translate(-50%,10%)",
-        backfaceVisibility: "hidden",
+        left: hoverInfo.x,
+        top: hoverInfo.y,
+        transform: "translate(-50%, -120%)",
+        pointerEvents: "none",
       }}
     >
-      <div>Region: {hoverInfo.feature.properties?.name}</div>
-      <div>Total Clients: {hoverInfo.feature.properties?.totalClients}</div>
-      <div>
-        Clients Without Service:{" "}
-        {hoverInfo.feature.properties?.totalClientsWithoutService}
-      </div>
+      <h3 className="font-bold text-sm">
+        Region: {hoverInfo.feature.properties?.name}
+      </h3>
+      <ul className="flex flex-col text-xs">
+        <li>Total Clients: {hoverInfo.feature.properties?.totalClients}</li>
+        <li>
+          Without Service:{" "}
+          {hoverInfo.feature.properties?.totalClientsWithoutService}
+        </li>
+        <li>
+          Percentage Without Service:{" "}
+          {hoverInfo.feature.properties?.percentageClientsWithoutService}%
+        </li>
+      </ul>
     </div>
   );
 };
