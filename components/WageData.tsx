@@ -18,7 +18,7 @@ const WageData: React.FC<WageDataProps> = ({ wageData }) => {
   return (
     <div className="mt-10 px-4 max-w-3xl mx-auto">
       <h2 className="text-3xl font-semibold text-center text-blue-500 mb-8">
-        Wage Distribution in Puerto Rico {wageData?.data[0]["ID Year"]}
+        Wage Distribution in Puerto Rico {wageData?.data[0]?.["ID Year"]}
       </h2>
       <p className="text-center text-gray-500 mb-6">
         This section presents an overview of wage distributions in Puerto Rico,

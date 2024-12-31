@@ -75,7 +75,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
         }}
         scrollZoom={false}
         mapStyle="mapbox://styles/mapbox/light-v11"
-        mapboxAccessToken="pk.eyJ1IjoiYnJpdG9rMzAiLCJhIjoiY2w4ZG40MHkzMDg0aDN4cDFxc2Y4eXEwYyJ9.kVaP2RxtBe-fbzr04Pchjw"
+        mapboxAccessToken="pk.eyJ1IjoiYnJpdG9rMzAiLCJhIjoiY201Y3BvY3czMzY3NzJtcHEzMnhhdDNxeCJ9.-nWsweKOMQX3VZ1f-Umxtw"
         onMouseMove={onHover}
         interactiveLayerIds={["fillLayer"]}
       >

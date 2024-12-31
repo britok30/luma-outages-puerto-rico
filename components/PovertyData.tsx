@@ -17,7 +17,7 @@ const PovertyData: React.FC<PovertyComponentProps> = ({ povertyData }) => {
   return (
     <div className="mt-10 px-4 max-w-3xl mx-auto">
       <h2 className="text-3xl font-semibold text-center text-blue-500 mb-8">
-        Poverty in Puerto Rico {povertyData?.data[0]["ID Year"]}
+        Poverty in Puerto Rico {povertyData?.data[0]?.["ID Year"]}
       </h2>
       <p className="text-center text-gray-500 mb-6">
         Overview of poverty levels across various age groups in Puerto Rico by
