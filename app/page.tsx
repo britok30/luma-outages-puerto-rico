@@ -2,7 +2,7 @@ import React from "react";
 import { TotalStatsPR } from "../components/TotalStatsPR";
 import { Footer } from "../components/Footer";
 import { ArrowDown } from "react-feather";
-import { getOutage, getPoverty, getWages } from "@/lib/stats";
+import { getOutage } from "@/lib/stats";
 import HelpPR from "@/components/HelpPR";
 import PovertyData from "@/components/PovertyData";
 import WageData from "@/components/WageData";
@@ -11,8 +11,6 @@ import { PuertoRicoMap } from "@/components/PuertoRicoMap";
 
 export default async function Home() {
   const outages = await getOutage();
-  const poverty = await getPoverty();
-  const wages = await getWages();
 
   return (
     <div className="">

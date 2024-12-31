@@ -4,6 +4,60 @@ import React, { useMemo } from "react";
 import { Regions, Totals } from "../lib/types";
 import { UpdatedOn } from "./UpdatedOn";
 import { CSVLink } from "react-csv";
+import { Card } from "./ui/card";
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  change?: string;
+  variant?: "success" | "danger" | "info";
+}
+
+const StatCard = ({
+  title,
+  value,
+  change,
+  variant = "info",
+}: StatCardProps) => {
+  const variants = {
+    success: "bg-green-50 text-green-700",
+    danger: "bg-red-50 text-red-700",
+    info: "bg-blue-50 text-blue-700",
+  };
+
+  return (
+    <Card className="p-6 hover:shadow-lg transition-all duration-200">
+      <div className="flex justify-between">
+        <p className="text-gray-500 text-sm">{title}</p>
+        {change && (
+          <span
+            className={`text-xs px-2.5 py-0.5 rounded-full ${variants[variant]}`}
+          >
+            {change}
+          </span>
+        )}
+      </div>
+      <p className="text-3xl font-bold mt-2">{value}</p>
+    </Card>
+  );
+};
+
+const RegionCard = ({ region }: { region: Regions }) => (
+  <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all">
+    <div className="flex items-center justify-between mb-4">
+      <h3 className="font-medium">{region.name}</h3>
+      <span className="text-xs px-3 py-1 bg-red-100 text-red-800 rounded-full">
+        {region.percentageClientsWithoutService.toFixed(0)}% affected
+      </span>
+    </div>
+    <div className="w-full bg-gray-200 rounded-full h-2">
+      <div
+        className="bg-red-500 h-2 rounded-full"
+        style={{ width: `${region.percentageClientsWithoutService}%` }}
+      />
+    </div>
+  </div>
+);
 
 export const TotalStatsPR = ({
   totalStats,
@@ -14,123 +68,94 @@ export const TotalStatsPR = ({
   regions?: Regions[];
   timestamp: string;
 }) => {
-  const energyStats = useMemo(() => {
+  const stats = useMemo(() => {
     if (!totalStats) return null;
 
-    const {
-      totalClients,
-      totalClientsWithoutService,
-      totalPercentageWithoutService,
-      totalClientsWithService,
-      totalPercentageWithService,
-    } = totalStats;
-
     return {
-      lumaTotalClients: totalClients,
-      lumaWithoutEnergy: totalClientsWithoutService,
-      lumaWithoutEnergyPercentage: totalPercentageWithoutService,
-      lumaWithEnergy: totalClientsWithService,
-      lumaWithEnergyPercentage: totalPercentageWithService,
+      withoutService: {
+        value: totalStats.totalClientsWithoutService?.toLocaleString() || "-",
+        percentage: totalStats.totalPercentageWithoutService?.toFixed(0),
+      },
+      withService: {
+        value: totalStats.totalClientsWithService?.toLocaleString() || "-",
+        percentage: totalStats.totalPercentageWithService?.toFixed(0),
+      },
+      total: totalStats.totalClients?.toLocaleString() || "-",
     };
   }, [totalStats]);
 
   const csvData = useMemo(() => {
-    if (!energyStats) return [];
+    if (!stats) return [];
     return [
-      [
-        "Timestamp",
-        "Total Clients Without Energy (LUMA)",
-        "Total Clients With Energy (LUMA)",
-        "Percentage of Clients Without Energy (LUMA)",
-        "Percentage of Clients With Energy (LUMA)",
-        "Total Clients (LUMA)",
-      ],
+      ["Timestamp", "Clients Without Service", "Clients With Service", "Total"],
       [
         timestamp,
-        energyStats.lumaWithoutEnergy?.toLocaleString() || "-",
-        energyStats.lumaWithEnergy?.toLocaleString() || "-",
-        `${energyStats.lumaWithoutEnergyPercentage?.toFixed(0)}%` || "-",
-        `${energyStats.lumaWithEnergyPercentage?.toFixed(0)}%` || "-",
-        energyStats.lumaTotalClients?.toLocaleString() || "-",
+        stats.withoutService.value,
+        stats.withService.value,
+        stats.total,
       ],
     ];
-  }, [energyStats, timestamp]);
+  }, [stats, timestamp]);
+
+  if (!stats) return null;
 
   return (
-    <div className="mb-10 border rounded-lg p-4 md:w-2/3">
-      <h2 className="text-2xl md:text-4xl text-blue-500 mb-2">
-        Ahora en Puerto Rico
-      </h2>
-      <div className="text-lg font-light text-left grid grid-cols-1 md:grid-cols-2 md:gap-x-5">
-        {energyStats && (
-          <>
-            <StatText
-              stat={energyStats.lumaWithoutEnergy?.toLocaleString() || "-"}
-              text="Total Clients Without Service (LUMA) | Clientes Totales Sin Servicio (LUMA)"
-            />
-            <StatText
-              stat={energyStats.lumaWithEnergy?.toLocaleString() || "-"}
-              text="Total Clients With Service (LUMA) | Clientes Totales Sin Servicio (LUMA)"
-            />
-            <StatText
-              stat={
-                `${energyStats.lumaWithoutEnergyPercentage?.toFixed(0)}%` || "-"
-              }
-              text="Percentage of Clients Without Service (LUMA) | Porcentaje de Clientes Sin Servicio (LUMA)"
-            />
-            <StatText
-              stat={
-                `${energyStats.lumaWithEnergyPercentage?.toFixed(0)}%` || "-"
-              }
-              text="Percentage of Clients With Service (LUMA) | Porcentaje de Clientes Con Servicio (LUMA)"
-            />
-            <StatText
-              stat={energyStats.lumaTotalClients?.toLocaleString() || "-"}
-              text="Total Clients in Puerto Rico | Clientes Totales en Puerto Rico"
-            />
-          </>
+    <div className="space-y-8 mb-10">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Puerto Rico Power Status</h2>
+        {csvData.length > 0 && (
+          <CSVLink
+            data={csvData}
+            filename="power-status.csv"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            Export Data
+          </CSVLink>
         )}
-
-        {regions.map((region, index) => (
-          <RegionStat key={region.name} region={region} index={index} />
-        ))}
       </div>
-      <p className="text-xs mt-5 font-light">
-        These numbers are based on the limited available information provided by
-        LUMA. They are rough estimates.
-      </p>
-      <UpdatedOn timestamp={timestamp} />
-      {csvData.length > 1 && (
-        <CSVLink
-          filename="luma-data.csv"
-          className="text-sm underline"
-          data={csvData}
-        >
-          Download CSV
-        </CSVLink>
-      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard
+          title="Without Service"
+          value={stats.withoutService.value}
+          change={`${stats.withoutService.percentage}%`}
+          variant="danger"
+        />
+        <StatCard
+          title="With Service"
+          value={stats.withService.value}
+          change={`${stats.withService.percentage}%`}
+          variant="success"
+        />
+        <StatCard title="Total Clients" value={stats.total} variant="info" />
+      </div>
+
+      <div className="bg-white rounded-lg p-6">
+        <h3 className="text-lg font-medium mb-4">Regional Breakdown</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {regions.map((region) => (
+            <RegionCard key={region.name} region={region} />
+          ))}
+        </div>
+      </div>
+
+      <footer className="text-sm text-gray-500 space-y-2">
+        <UpdatedOn timestamp={timestamp} />
+        <p>Data provided by LUMA. Values are approximate estimates.</p>
+      </footer>
     </div>
   );
 };
-
-const StatText = ({ stat, text }: { stat: number | string; text: string }) => (
-  <div className="my-2 text-xs">
-    <p className="text-red-400 text-xl md:text-2xl mb-1">{stat}</p>
-    <p>{text}</p>
-  </div>
-);
-
-const RegionStat = ({ region, index }: { region: Regions; index: number }) => (
-  <div className="my-2 text-xs">
-    <p
-      className={
-        index % 2 === 0
-          ? "text-blue-500 text-xl md:text-2xl mb-1"
-          : "text-red-400 text-xl md:text-2xl mb-1"
-      }
-    >
-      {`${region.percentageClientsWithoutService.toFixed(0)}%` || "-"}
-    </p>
-    {`Percentage of Clients without power in ${region.name} | Porcentaje de Clientes sin energía en ${region.name}`}
-  </div>
-);
