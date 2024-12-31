@@ -97,8 +97,6 @@ export const TotalStatsPR = ({
     ];
   }, [stats, timestamp]);
 
-  if (!stats) return null;
-
   return (
     <div className="space-y-8 mb-10">
       <div className="flex items-center justify-between">
