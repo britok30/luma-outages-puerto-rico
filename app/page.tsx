@@ -30,11 +30,11 @@ export default async function Home() {
 
       <main className="flex w-full flex-col items-center justify-center text-center py-10">
         <TotalStatsPR
-          totalStats={outages.totals}
-          regions={outages.regions}
-          timestamp={outages.timestamp}
+          totalStats={outages?.totals}
+          regions={outages?.regions}
+          timestamp={outages?.timestamp || ""}
         />
-        <PuertoRicoMap regions={outages.regions} />
+        <PuertoRicoMap regions={outages?.regions || []} />
         <WageData wageData={wages} />
         <PovertyData povertyData={poverty} />
         <HelpPR />

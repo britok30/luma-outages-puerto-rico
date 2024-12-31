@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const eudoxusSans = localFont({
   src: [
@@ -88,7 +89,10 @@ export default async function RootLayout({
       lang="es"
       className="bg-white text-black scrollbar scrollbar-thumb-zinc-300 scrollbar-track-white"
     >
-      <body className={`${eudoxusSans.className} antialiased`}>{children}</body>
+      <body className={`${eudoxusSans.className} antialiased`}>
+        <Analytics />
+        {children}
+      </body>
     </html>
   );
 }
