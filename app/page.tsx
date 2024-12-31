@@ -35,8 +35,6 @@ export default async function Home() {
           timestamp={outages?.timestamp || ""}
         />
         <PuertoRicoMap regions={outages?.regions || []} />
-        <WageData wageData={wages} />
-        <PovertyData povertyData={poverty} />
         <HelpPR />
         <Petitions />
       </main>
