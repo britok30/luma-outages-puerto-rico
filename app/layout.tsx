@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
@@ -33,16 +33,17 @@ const eudoxusSans = localFont({
   ],
 });
 
-export const metadata = {
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1.0,
+};
+
+export const metadata: Metadata = {
   title:
     "Puerto Rico Power Outages | Real-Time Updates & Reports | Apagones en Puerto Rico - Información en Tiempo Real",
   description:
     "Track, record, and stay updated on power outages across Puerto Rico with Apagón Puerto Rico. Receive real-time updates and comprehensive reports on electricity interruptions. Mantente informado sobre apagones en Puerto Rico con reportes en tiempo real.",
   metadataBase: new URL("https://www.apagonpuertorico.com"),
-  viewport: {
-    width: "device-width",
-    initialScale: 1.0,
-  },
   openGraph: {
     title: "Apagón Puerto Rico | Real-Time Power Outage Reports",
     description:
@@ -87,7 +88,7 @@ export default async function RootLayout({
   return (
     <html
       lang="es"
-      className="bg-white text-black scrollbar scrollbar-thumb-zinc-300 scrollbar-track-white"
+      className="bg-gray-50 text-gray-900 scrollbar scrollbar-thumb-zinc-300 scrollbar-track-gray-50"
     >
       <body className={`${eudoxusSans.className} antialiased`}>
         <Analytics />

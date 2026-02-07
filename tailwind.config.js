@@ -55,9 +55,6 @@ module.exports = {
           5: "hsl(var(--chart-5))",
         },
       },
-      backgroundImage: {
-        hero: "linear-gradient(rgba(0,0, 0, 0.2), rgba(0, 0, 0, 0.8)), url(/hero.jpg)",
-      },
     },
   },
   plugins: [require("tailwindcss-animate"), require("tailwind-scrollbar")],

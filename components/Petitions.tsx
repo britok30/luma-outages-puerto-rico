@@ -1,25 +1,13 @@
 import React from "react";
+import { ExternalLink } from "lucide-react";
 
 export const Petitions = () => {
   return (
-    <div className="mt-10 px-4 max-w-3xl mx-auto flex flex-col items-center">
-      <h2 className="text-3xl md:text-4xl mb-4 text-blue-500 text-center">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <h2 className="text-xl font-semibold text-gray-900 mb-6">
         Petitions | Peticiones
       </h2>
-      <p className="text-lg md:text-xl text-gray-600 text-center mb-6">
-        Show your support for Puerto Rico by signing these petitions to help
-        bring about positive change.
-      </p>
-      <a
-        className="underline text-lg md:text-xl text-blue-500 hover:text-blue-700 transition duration-200 mb-8 text-center"
-        target="_blank"
-        rel="noopener noreferrer"
-        href="https://www.change.org/"
-      >
-        Explore more on Change.org
-      </a>
-
-      <div className="space-y-4 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <PetitionLink
           title="Cancelacion Contrato Luma Puerto Rico"
           url="https://www.change.org/p/cancelacion-contrato-luma-puerto-rico?original_footer_petition_id=815564&algorithm=promoted&source_location=petition_footer&grid_position=1&pt=AVBldGl0aW9uABDcCgIAAAAAYxMkAnvsIz83ZTJjNzYyYg%3D%3D"
@@ -28,6 +16,20 @@ export const Petitions = () => {
           title="Protejamos las tierras de Puerto Rico"
           url="https://www.change.org/p/gobernador-pedro-pierluisi-protect-puerto-rico-s-land?recruiter=1185529629&recruited_by_id=6b94ac90-8375-11eb-9f2b-69cd1d0deb8b&utm_source=share_petition&utm_medium=copylink&utm_campaign=petition_dashboard"
         />
+        <PetitionLink
+          title="Rebuild PR's Power Grid with Renewables, not Fossil Fuels"
+          url="https://www.change.org/p/fema-rebuild-puerto-rico-s-power-grid-with-renewables-not-fossil-fuels"
+        />
+      </div>
+      <div className="mt-4 text-center">
+        <a
+          className="text-sm text-blue-600 hover:text-blue-700 transition-colors"
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.change.org/"
+        >
+          Explore more on Change.org
+        </a>
       </div>
     </div>
   );
@@ -38,9 +40,14 @@ const PetitionLink = ({ title, url }: { title: string; url: string }) => (
     target="_blank"
     rel="noopener noreferrer"
     href={url}
-    className="block font-semibold text-red-500 underline text-lg hover:text-red-700 transition duration-200 text-center"
+    className="block bg-white rounded-lg border border-gray-200 p-5 hover:border-gray-300 hover:shadow-sm transition-all group"
   >
-    {title}
+    <div className="flex items-center justify-between">
+      <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+        {title}
+      </h3>
+      <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors flex-shrink-0 ml-2" />
+    </div>
   </a>
 );
 

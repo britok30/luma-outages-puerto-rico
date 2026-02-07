@@ -1,8 +1,8 @@
 "use client";
 
 import { Feature } from "geojson";
-import React, { useCallback, useState, useMemo } from "react";
-import Map, { Layer, Source } from "react-map-gl";
+import { useCallback, useState, useMemo } from "react";
+import Map, { Layer, Source } from "react-map-gl/mapbox";
 import RegionsJSON from "../lib/puerto-rico.json";
 import { Regions } from "../lib/types";
 
@@ -31,6 +31,16 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
     }
   }, []);
 
+  const REGION_COLORS: Record<string, string> = {
+    Arecibo: "#6366f1",   // indigo
+    Bayamon: "#f59e0b",   // amber
+    Caguas: "#10b981",    // emerald
+    Carolina: "#3b82f6",  // blue
+    Mayaguez: "#ef4444",  // red
+    Ponce: "#8b5cf6",     // violet
+    "San Juan": "#ec4899", // pink
+  };
+
   const updateJSON = (
     featureCollection: GeoJSON.FeatureCollection<GeoJSON.Geometry>
   ): GeoJSON.FeatureCollection<GeoJSON.Geometry> => {
@@ -38,6 +48,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
     return {
       type: "FeatureCollection",
       features: features.map((f, index) => {
+        const name = regions[index]?.name || f.properties?.name || "";
         const properties = {
           ...f.properties,
           totalClients: regions[index]?.totalClients || 0,
@@ -45,6 +56,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
             regions[index]?.totalClientsWithoutService || 0,
           percentageClientsWithoutService:
             regions[index]?.percentageClientsWithoutService || 0,
+          color: REGION_COLORS[name] || "#4BA3C3",
         };
         return { ...f, properties };
       }),
@@ -58,15 +70,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
   }, [regions]);
 
   return (
-    <div className="w-full md:w-2/3 h-[400px] md:h-[600px] mb-20 relative">
-      <div className="mb-5 text-center">
-        <h2 className="text-2xl md:text-4xl mb-2 text-blue-500">
-          Puerto Rico Map - Region Outages
-        </h2>
-        <p className="text-xs md:text-sm">
-          Hover (or tap on mobile) over a region to view statistics.
-        </p>
-      </div>
+    <div className="w-full h-full relative">
       <Map
         initialViewState={{
           longitude: -66.664513,
@@ -75,7 +79,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
         }}
         scrollZoom={false}
         mapStyle="mapbox://styles/mapbox/light-v11"
-        mapboxAccessToken="pk.eyJ1IjoiYnJpdG9rMzAiLCJhIjoiY201Y3BvY3czMzY3NzJtcHEzMnhhdDNxeCJ9.-nWsweKOMQX3VZ1f-Umxtw"
+        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""}
         onMouseMove={onHover}
         interactiveLayerIds={["fillLayer"]}
       >
@@ -85,8 +89,8 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
             type="fill"
             source="puerto-rico"
             paint={{
-              "fill-color": "#4BA3C3", // Light blue color to make regions visible and compatible with the ocean color
-              "fill-opacity": 0.4, // Lower opacity to show map background
+              "fill-color": ["get", "color"],
+              "fill-opacity": 0.45,
             }}
           />
           <Layer

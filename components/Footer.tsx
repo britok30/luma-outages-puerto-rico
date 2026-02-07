@@ -4,14 +4,15 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="flex flex-col items-center justify-center h-24 w-full mb-10 text-md">
-      <div className="text-center text-xs text-red-400">
-        <p>Not affiliated with the Puerto Rican Government or LUMA Energy.</p>
-        <p>No está afiliado con el Gobierno de Puerto Rico o LUMA Energy.</p>
-      </div>
-      <div className="my-3 text-center text-xs text-blue-500">
-        <p>© {currentYear} | Designed & Built by Brito</p>
-        <p className="mt-1">Made with ❤️ using Nextjs</p>
+    <footer className="border-t border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+        <p className="text-xs text-gray-400">
+          Not affiliated with the Puerto Rican Government or LUMA Energy. / No
+          esta afiliado con el Gobierno de Puerto Rico o LUMA Energy.
+        </p>
+        <p className="text-xs text-gray-500 mt-2">
+          &copy; {currentYear} | Designed & Built by Brito
+        </p>
       </div>
     </footer>
   );

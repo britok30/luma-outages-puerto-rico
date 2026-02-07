@@ -1,29 +1,24 @@
-import axios from "axios";
 import { Outage } from "./types";
 
-export const getOutage = async () => {
+export const getClientsWithoutService = async (): Promise<Outage | null> => {
   try {
     const response = await fetch(
       "https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService",
       {
-        cache: "no-cache",
         next: {
-          revalidate: 3600,
-        },
-        headers: {
-          "Content-Type": "application/json",
+          revalidate: 300, // Revalidate data every 5 minutes
         },
       }
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`Failed to fetch clients: ${response.statusText}`);
     }
 
-    const outages = (await response.json()) as Outage;
-
+    const outages: Outage = await response.json();
     return outages;
   } catch (e) {
-    console.error("Failed to fetch outages:", e);
+    console.error("Failed to fetch clients:", e);
+    return null; // Return null or a default value in case of error
   }
 };

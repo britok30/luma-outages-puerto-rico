@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Regions, Totals } from "../lib/types";
-import { UpdatedOn } from "./UpdatedOn";
-import { CSVLink } from "react-csv";
-import { Card } from "./ui/card";
 
 interface StatCardProps {
   title: string;
@@ -13,60 +10,68 @@ interface StatCardProps {
   variant?: "success" | "danger" | "info";
 }
 
+const variantAccents = {
+  success: "border-emerald-500",
+  danger: "border-red-500",
+  info: "border-blue-500",
+};
+
+const variantBadges = {
+  success: "bg-emerald-50 text-emerald-700",
+  danger: "bg-red-50 text-red-700",
+  info: "bg-blue-50 text-blue-700",
+};
+
 const StatCard = ({
   title,
   value,
   change,
   variant = "info",
-}: StatCardProps) => {
-  const variants = {
-    success: "bg-green-50 text-green-700",
-    danger: "bg-red-50 text-red-700",
-    info: "bg-blue-50 text-blue-700",
-  };
+}: StatCardProps) => (
+  <div
+    className={`bg-white rounded-lg border border-gray-200 border-l-4 ${variantAccents[variant]} p-5`}
+  >
+    <div className="flex items-center justify-between">
+      <p className="text-sm text-gray-500">{title}</p>
+      {change && (
+        <span
+          className={`text-xs px-2 py-0.5 rounded-full font-medium ${variantBadges[variant]}`}
+        >
+          {change}
+        </span>
+      )}
+    </div>
+    <p className="text-2xl font-bold mt-1 tabular-nums">{value}</p>
+  </div>
+);
 
-  return (
-    <Card className="p-6 hover:shadow-lg transition-all duration-200">
-      <div className="flex justify-between">
-        <p className="text-gray-500 text-sm">{title}</p>
-        {change && (
-          <span
-            className={`text-xs px-2.5 py-0.5 rounded-full ${variants[variant]}`}
-          >
-            {change}
-          </span>
-        )}
-      </div>
-      <p className="text-3xl font-bold mt-2">{value}</p>
-    </Card>
-  );
-};
-
-const RegionCard = ({ region }: { region: Regions }) => (
-  <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-all">
-    <div className="flex items-center justify-between mb-4">
-      <h3 className="font-medium">{region.name}</h3>
-      <span className="text-xs px-3 py-1 bg-red-100 text-red-800 rounded-full">
-        {region.percentageClientsWithoutService.toFixed(0)}% affected
+export const RegionCard = ({ region }: { region: Regions }) => (
+  <div className="bg-white rounded-lg border border-gray-200 p-4 hover:border-gray-300 transition-colors">
+    <div className="flex items-center justify-between mb-2">
+      <h3 className="font-medium text-sm">{region.name}</h3>
+      <span className="text-xs px-2 py-0.5 bg-red-50 text-red-700 rounded-full font-medium">
+        {region.percentageClientsWithoutService.toFixed(1)}%
       </span>
     </div>
-    <div className="w-full bg-gray-200 rounded-full h-2">
+    <div className="w-full bg-gray-100 rounded-full h-1.5">
       <div
-        className="bg-red-500 h-2 rounded-full"
+        className="bg-red-500 h-1.5 rounded-full transition-all"
         style={{ width: `${region.percentageClientsWithoutService}%` }}
       />
     </div>
+    <p className="text-xs text-gray-400 mt-2 tabular-nums">
+      {region.totalClientsWithoutService.toLocaleString()} / {region.totalClients.toLocaleString()} clients
+    </p>
   </div>
 );
 
 export const TotalStatsPR = ({
   totalStats,
   regions = [],
-  timestamp = "",
 }: {
   totalStats?: Totals;
   regions?: Regions[];
-  timestamp: string;
+  timestamp?: string;
 }) => {
   const stats = useMemo(() => {
     if (!totalStats) return null;
@@ -84,48 +89,11 @@ export const TotalStatsPR = ({
     };
   }, [totalStats]);
 
-  const csvData = useMemo(() => {
-    if (!stats) return [];
-    return [
-      ["Timestamp", "Clients Without Service", "Clients With Service", "Total"],
-      [
-        timestamp,
-        stats.withoutService.value,
-        stats.withService.value,
-        stats.total,
-      ],
-    ];
-  }, [stats, timestamp]);
+  if (!stats) return null;
 
   return (
-    <div className="space-y-8 mb-10">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Puerto Rico Power Status</h2>
-        {csvData.length > 0 && (
-          <CSVLink
-            data={csvData}
-            filename="power-status.csv"
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-              />
-            </svg>
-            Export Data
-          </CSVLink>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
           title="Without Service"
           value={stats.withoutService.value}
@@ -140,20 +108,6 @@ export const TotalStatsPR = ({
         />
         <StatCard title="Total Clients" value={stats.total} variant="info" />
       </div>
-
-      <div className="bg-white rounded-lg p-6">
-        <h3 className="text-lg font-medium mb-4">Regional Breakdown</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {regions.map((region) => (
-            <RegionCard key={region.name} region={region} />
-          ))}
-        </div>
-      </div>
-
-      <footer className="text-sm text-gray-500 space-y-2">
-        <UpdatedOn timestamp={timestamp} />
-        <p>Data provided by LUMA. Values are approximate estimates.</p>
-      </footer>
     </div>
   );
 };

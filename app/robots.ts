@@ -6,16 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/_next/",
-          "/*.json$",
-          "/*_buildManifest.js$",
-          "/*_middlewareManifest.js$",
-          "/*_ssgManifest.js$",
-          "/*.js$",
-          "/*?ref*",
-          "/*?utm_source*",
-        ],
+        disallow: ["/_next/"],
       },
     ],
     sitemap: "https://www.apagonpuertorico.com/sitemap.xml",
