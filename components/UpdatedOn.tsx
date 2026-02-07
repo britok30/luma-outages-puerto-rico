@@ -10,10 +10,10 @@ export const UpdatedOn = ({ timestamp }: { timestamp?: string }) => (
       target="_blank"
       rel="noopener noreferrer"
     >
-      Original Data Source
+      Original Data Source | Fuente de Datos Original
     </a>
     {timestamp && (
-      <p className="font-light mt-2 md:mt-0">Updated on: {timestamp}</p>
+      <p className="font-light mt-2 md:mt-0">Updated on | Actualizado: {timestamp}</p>
     )}
   </div>
 );

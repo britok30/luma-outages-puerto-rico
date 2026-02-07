@@ -19,21 +19,21 @@ const PovertyData = ({ data }: { data: PovertyDataType }) => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-baseline justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">
-          Poverty in Puerto Rico
+          Poverty in Puerto Rico | Pobreza en Puerto Rico
         </h2>
         <span className="text-sm text-gray-400">ACS {data.year}</span>
       </div>
 
       {/* Overview stat */}
       <div className="bg-white rounded-lg border border-gray-200 border-l-4 border-l-red-500 p-5 mb-6">
-        <p className="text-sm text-gray-500">Overall Poverty Rate</p>
+        <p className="text-sm text-gray-500">Overall Poverty Rate | Tasa General de Pobreza</p>
         <div className="flex items-baseline gap-3 mt-1">
           <span className="text-3xl font-bold tabular-nums">
             {data.overallRate}%
           </span>
           <span className="text-sm text-gray-400">
-            {data.totalBelowPoverty.toLocaleString()} of{" "}
-            {data.totalPopulation.toLocaleString()} people
+            {data.totalBelowPoverty.toLocaleString()} of | de{" "}
+            {data.totalPopulation.toLocaleString()} people | personas
           </span>
         </div>
       </div>
@@ -41,7 +41,7 @@ const PovertyData = ({ data }: { data: PovertyDataType }) => {
       {/* Chart */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <h3 className="text-sm font-medium text-gray-500 mb-4">
-          Poverty Rate by Group
+          Poverty Rate by Group | Tasa de Pobreza por Grupo
         </h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
@@ -58,8 +58,8 @@ const PovertyData = ({ data }: { data: PovertyDataType }) => {
             />
             <Tooltip
               formatter={(value, _name, props) => [
-                `${value}% (${(props.payload as { population: number }).population.toLocaleString()} people)`,
-                "Poverty Rate",
+                `${value}% (${(props.payload as { population: number }).population.toLocaleString()} people | personas)`,
+                "Poverty Rate | Tasa de Pobreza",
               ]}
               contentStyle={{
                 borderRadius: "8px",
@@ -77,7 +77,7 @@ const PovertyData = ({ data }: { data: PovertyDataType }) => {
       </div>
 
       <p className="text-xs text-gray-400 mt-4">
-        Source: U.S. Census Bureau, American Community Survey {data.year} 1-Year
+        Source | Fuente: U.S. Census Bureau, American Community Survey {data.year} 1-Year
         Estimates (Table S1701)
       </p>
     </div>

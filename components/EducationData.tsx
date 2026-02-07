@@ -19,14 +19,14 @@ const EducationData = ({ data }: { data: EducationDataType }) => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-baseline justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">
-          Educational Attainment
+          Educational Attainment | Nivel Educativo
         </h2>
         <span className="text-sm text-gray-400">ACS {data.year}</span>
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <h3 className="text-sm font-medium text-gray-500 mb-4">
-          Population 25+: {data.population25Plus.toLocaleString()}
+          Population 25+ | Población 25+: {data.population25Plus.toLocaleString()}
         </h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
@@ -48,8 +48,8 @@ const EducationData = ({ data }: { data: EducationDataType }) => {
             />
             <Tooltip
               formatter={(value, _name, props) => [
-                `${value}% (${(props.payload as { count: number }).count.toLocaleString()} people)`,
-                "Attainment",
+                `${value}% (${(props.payload as { count: number }).count.toLocaleString()} people | personas)`,
+                "Attainment | Nivel",
               ]}
               contentStyle={{
                 borderRadius: "8px",
@@ -67,7 +67,7 @@ const EducationData = ({ data }: { data: EducationDataType }) => {
       </div>
 
       <p className="text-xs text-gray-400 mt-4">
-        Source: U.S. Census Bureau, American Community Survey {data.year} 1-Year
+        Source | Fuente: U.S. Census Bureau, American Community Survey {data.year} 1-Year
         Estimates (Table S1501)
       </p>
     </div>

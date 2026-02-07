@@ -60,7 +60,7 @@ export const RegionCard = ({ region }: { region: Regions }) => (
       />
     </div>
     <p className="text-xs text-gray-400 mt-2 tabular-nums">
-      {region.totalClientsWithoutService.toLocaleString()} / {region.totalClients.toLocaleString()} clients
+      {region.totalClientsWithoutService.toLocaleString()} / {region.totalClients.toLocaleString()} clients | clientes
     </p>
   </div>
 );
@@ -95,18 +95,18 @@ export const TotalStatsPR = ({
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <StatCard
-          title="Without Service"
+          title="Without Service | Sin Servicio"
           value={stats.withoutService.value}
           change={`${stats.withoutService.percentage}%`}
           variant="danger"
         />
         <StatCard
-          title="With Service"
+          title="With Service | Con Servicio"
           value={stats.withService.value}
           change={`${stats.withService.percentage}%`}
           variant="success"
         />
-        <StatCard title="Total Clients" value={stats.total} variant="info" />
+        <StatCard title="Total Clients | Clientes Totales" value={stats.total} variant="info" />
       </div>
     </div>
   );

@@ -73,9 +73,9 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
     <div className="w-full h-full relative">
       <Map
         initialViewState={{
-          longitude: -66.664513,
-          latitude: 18.200178,
-          zoom: 7.5,
+          longitude: -66.5901,
+          latitude: 18.2208,
+          zoom: 7.3,
         }}
         scrollZoom={false}
         mapStyle="mapbox://styles/mapbox/light-v11"
@@ -102,9 +102,9 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
               "line-width": 1,
             }}
           />
-          {hoverInfo && <Tooltip hoverInfo={hoverInfo} />}
         </Source>
       </Map>
+      {hoverInfo && <Tooltip hoverInfo={hoverInfo} />}
     </div>
   );
 };
@@ -112,7 +112,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
 const Tooltip = ({ hoverInfo }: { hoverInfo: HoverInfo }) => {
   return (
     <div
-      className="absolute bg-white text-gray-800 p-2 rounded-lg shadow-lg text-left"
+      className="absolute z-10 bg-white text-gray-800 p-2 rounded-lg shadow-lg text-left whitespace-nowrap"
       style={{
         left: hoverInfo.x,
         top: hoverInfo.y,
@@ -121,16 +121,16 @@ const Tooltip = ({ hoverInfo }: { hoverInfo: HoverInfo }) => {
       }}
     >
       <h3 className="font-bold text-sm">
-        Region: {hoverInfo.feature.properties?.name}
+        Region | Región: {hoverInfo.feature.properties?.name}
       </h3>
       <ul className="flex flex-col text-xs">
-        <li>Total Clients: {hoverInfo.feature.properties?.totalClients}</li>
+        <li>Total Clients | Clientes Totales: {hoverInfo.feature.properties?.totalClients}</li>
         <li>
-          Without Service:{" "}
+          Without Service | Sin Servicio:{" "}
           {hoverInfo.feature.properties?.totalClientsWithoutService}
         </li>
         <li>
-          Percentage Without Service:{" "}
+          Percentage Without Service | Porcentaje Sin Servicio:{" "}
           {hoverInfo.feature.properties?.percentageClientsWithoutService}%
         </li>
       </ul>

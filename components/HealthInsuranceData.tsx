@@ -22,20 +22,20 @@ const HealthInsuranceData = ({ data }: { data: HealthInsuranceDataType }) => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-baseline justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">
-          Health Insurance Coverage
+          Health Insurance Coverage | Cobertura de Seguro Médico
         </h2>
         <span className="text-sm text-gray-400">ACS {data.year}</span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <div className="bg-white rounded-lg border border-gray-200 border-l-4 border-l-emerald-500 p-5">
-          <p className="text-sm text-gray-500">Insured</p>
+          <p className="text-sm text-gray-500">Insured | Asegurados</p>
           <p className="text-3xl font-bold tabular-nums mt-1">
             {data.insuredRate}%
           </p>
         </div>
         <div className="bg-white rounded-lg border border-gray-200 border-l-4 border-l-red-500 p-5">
-          <p className="text-sm text-gray-500">Uninsured</p>
+          <p className="text-sm text-gray-500">Uninsured | Sin Seguro</p>
           <p className="text-3xl font-bold tabular-nums mt-1">
             {data.uninsuredRate}%
           </p>
@@ -44,7 +44,7 @@ const HealthInsuranceData = ({ data }: { data: HealthInsuranceDataType }) => {
 
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <h3 className="text-sm font-medium text-gray-500 mb-4">
-          Civilian Noninstitutionalized Population
+          Civilian Noninstitutionalized Population | Población Civil No Institucionalizada
         </h3>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart
@@ -59,7 +59,7 @@ const HealthInsuranceData = ({ data }: { data: HealthInsuranceDataType }) => {
               tickFormatter={(v) => `${v}%`}
             />
             <Tooltip
-              formatter={(value) => [`${value}%`, "Coverage"]}
+              formatter={(value) => [`${value}%`, "Coverage | Cobertura"]}
               contentStyle={{
                 borderRadius: "8px",
                 border: "1px solid #e5e7eb",
@@ -76,7 +76,7 @@ const HealthInsuranceData = ({ data }: { data: HealthInsuranceDataType }) => {
       </div>
 
       <p className="text-xs text-gray-400 mt-4">
-        Source: U.S. Census Bureau, American Community Survey {data.year} 1-Year
+        Source | Fuente: U.S. Census Bureau, American Community Survey {data.year} 1-Year
         Estimates (Table S2701)
       </p>
     </div>

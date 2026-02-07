@@ -16,7 +16,7 @@ const IncomeData = ({ data }: { data: IncomeDataType }) => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-baseline justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">
-          Household Income Distribution
+          Household Income Distribution | Distribución de Ingresos del Hogar
         </h2>
         <span className="text-sm text-gray-400">ACS {data.year}</span>
       </div>
@@ -24,19 +24,19 @@ const IncomeData = ({ data }: { data: IncomeDataType }) => {
       {/* Summary stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-lg border border-gray-200 border-l-4 border-l-blue-500 p-5">
-          <p className="text-sm text-gray-500">Median Income</p>
+          <p className="text-sm text-gray-500">Median Income | Ingreso Mediano</p>
           <p className="text-2xl font-bold tabular-nums mt-1">
             ${data.medianIncome.toLocaleString()}
           </p>
         </div>
         <div className="bg-white rounded-lg border border-gray-200 border-l-4 border-l-indigo-500 p-5">
-          <p className="text-sm text-gray-500">Mean Income</p>
+          <p className="text-sm text-gray-500">Mean Income | Ingreso Promedio</p>
           <p className="text-2xl font-bold tabular-nums mt-1">
             ${data.meanIncome.toLocaleString()}
           </p>
         </div>
         <div className="bg-white rounded-lg border border-gray-200 border-l-4 border-l-emerald-500 p-5">
-          <p className="text-sm text-gray-500">Total Households</p>
+          <p className="text-sm text-gray-500">Total Households | Total de Hogares</p>
           <p className="text-2xl font-bold tabular-nums mt-1">
             {data.totalHouseholds.toLocaleString()}
           </p>
@@ -46,7 +46,7 @@ const IncomeData = ({ data }: { data: IncomeDataType }) => {
       {/* Bar chart */}
       <div className="bg-white rounded-lg border border-gray-200 p-5">
         <h3 className="text-sm font-medium text-gray-500 mb-4">
-          Distribution by Income Bracket
+          Distribution by Income Bracket | Distribución por Nivel de Ingreso
         </h3>
         <ResponsiveContainer width="100%" height={350}>
           <BarChart
@@ -66,7 +66,7 @@ const IncomeData = ({ data }: { data: IncomeDataType }) => {
               tickFormatter={(v) => `${v}%`}
             />
             <Tooltip
-              formatter={(value) => [`${value}%`, "Households"]}
+              formatter={(value) => [`${value}%`, "Households | Hogares"]}
               contentStyle={{
                 borderRadius: "8px",
                 border: "1px solid #e5e7eb",
@@ -84,7 +84,7 @@ const IncomeData = ({ data }: { data: IncomeDataType }) => {
       </div>
 
       <p className="text-xs text-gray-400 mt-4">
-        Source: U.S. Census Bureau, American Community Survey {data.year} 1-Year
+        Source | Fuente: U.S. Census Bureau, American Community Survey {data.year} 1-Year
         Estimates (Table S1901)
       </p>
     </div>

@@ -31,7 +31,7 @@ export default async function Home() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              Live
+              Live | En Vivo
             </span>
             <a
               href="https://miluma.lumapr.com/outages/outageMap"
@@ -39,7 +39,7 @@ export default async function Home() {
               rel="noopener noreferrer"
               className="text-xs text-gray-500 hover:text-blue-600 transition-colors hidden sm:block"
             >
-              Data Source
+              Data Source | Fuente de Datos
             </a>
           </div>
         </div>
