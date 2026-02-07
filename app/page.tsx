@@ -1,11 +1,20 @@
 import { Footer } from "../components/Footer";
-import { getClientsWithoutService } from "@/lib/stats";
+import { getClientsWithoutService, getCensusData } from "@/lib/stats";
 import HelpPR from "@/components/HelpPR";
 import Petitions from "@/components/Petitions";
+import PovertyData from "@/components/PovertyData";
+import IncomeData from "@/components/IncomeData";
+import GenderWageData from "@/components/GenderWageData";
+import EmploymentData from "@/components/EmploymentData";
+import EducationData from "@/components/EducationData";
+import HealthInsuranceData from "@/components/HealthInsuranceData";
 import { OutageDataProvider } from "@/components/OutageDataProvider";
 
 export default async function Home() {
-  const clients = await getClientsWithoutService();
+  const [clients, census] = await Promise.all([
+    getClientsWithoutService(),
+    getCensusData(),
+  ]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -41,6 +50,16 @@ export default async function Home() {
           <OutageDataProvider fallbackData={clients} />
         ) : (
           <LoadingSkeleton />
+        )}
+        {census && (
+          <>
+            <PovertyData data={census.poverty} />
+            <IncomeData data={census.income} />
+            <GenderWageData data={census.genderWage} />
+            <EmploymentData data={census.employment} />
+            <EducationData data={census.education} />
+            <HealthInsuranceData data={census.healthInsurance} />
+          </>
         )}
         <HelpPR />
         <Petitions />
