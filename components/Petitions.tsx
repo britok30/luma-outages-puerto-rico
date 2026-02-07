@@ -40,13 +40,13 @@ const PetitionLink = ({ title, url }: { title: string; url: string }) => (
     target="_blank"
     rel="noopener noreferrer"
     href={url}
-    className="block bg-white rounded-lg border border-gray-200 p-5 hover:border-gray-300 hover:shadow-sm transition-all group"
+    className="block bg-white rounded-lg border border-gray-200 p-5 hover:border-gray-300 hover:shadow-xs transition-all group"
   >
     <div className="flex items-center justify-between">
       <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
         {title}
       </h3>
-      <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors flex-shrink-0 ml-2" />
+      <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-500 transition-colors shrink-0 ml-2" />
     </div>
   </a>
 );

@@ -19,7 +19,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Compact Sticky Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-200">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xs border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-900">
             Apagon <span className="text-blue-600">Puerto</span>
