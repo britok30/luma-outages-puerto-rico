@@ -1,27 +1,45 @@
-# Next.js + Tailwind CSS Example
+# Apagón Puerto Rico
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+Live dashboard of power outages across Puerto Rico, built on LUMA Energy's public
+outage feed, with U.S. Census context on the communities affected.
 
-## Deploy your own
+**Live:** https://www.apagonpuertorico.com
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
+## Features
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
+- Island-wide and per-region customers without service, refreshed every 5 minutes
+- Severity choropleth map (Mapbox) with hover/tap details and a legend
+- Freshness indicator — flags when LUMA's last update is more than 30 minutes old
+- Spanish / English toggle (persisted in a cookie, no flash on reload)
+- ACS 1-year Census data: poverty, income, gender wage gap, employment, education, health insurance
+- Links to relief organizations and petitions
 
-## How to use
+## Stack
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+Next.js (App Router) · React 19 · Tailwind CSS v4 · SWR · react-map-gl / Mapbox GL. Charts are plain HTML/CSS — no charting library.
+
+## Development
 
 ```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
+yarn install
+cp .env.local.example .env.local   # add your Mapbox public token
+yarn dev
 ```
 
-```bash
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-```
+### Environment variables
 
-```bash
-pnpm create next-app --example with-tailwindcss with-tailwindcss-app
-```
+| Name | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | Mapbox public access token used by the outage map |
+| `CENSUS_API_KEY` | U.S. Census Bureau API key (free: https://api.census.gov/data/key_signup.html). Without it the Census API redirects to an HTML page and the demographic sections are skipped. |
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+## Data sources
+
+- Outages: `https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService` (proxied through `/api/outages`, cached for 5 minutes). Timestamps are Atlantic Standard Time.
+- Demographics: U.S. Census Bureau API, ACS 1-year estimates (tables S1701, S1901, B20017, S2301, S1501, S2701), cached for 24 hours.
+
+Region polygons live in `lib/puerto-rico.json` and are joined to the LUMA feed by region name.
+
+## Disclaimer
+
+Not affiliated with the Government of Puerto Rico or LUMA Energy.

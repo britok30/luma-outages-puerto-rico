@@ -2,7 +2,13 @@ export interface Regions {
   name: string;
   totalClients: number;
   totalClientsWithoutService: number;
+  totalClientsWithService?: number;
+  /** Customers out because of scheduled maintenance / improvements. */
+  totalClientsAffectedByPlannedOutage?: number;
+  /** Customers out because of load shedding ("relevo de carga"). */
+  totalClientsAffectedByLoadShed?: number;
   percentageClientsWithoutService: number;
+  percentageClientsWithService?: number;
 }
 
 export interface Totals {
@@ -11,6 +17,26 @@ export interface Totals {
   totalClientsWithService: number;
   totalPercentageWithoutService: number;
   totalPercentageWithService: number;
+  totalClientsAffectedByPlannedOutage?: number;
+  totalClientsAffectedByLoadShed?: number;
+}
+
+export interface Plant {
+  name: string;
+  mw: number;
+  maxMw: number | null;
+}
+
+/** Scraped from https://lumapr.com/system-overview/ */
+export interface SystemOverview {
+  demandMw: number;
+  nextHourDemandMw: number;
+  reserveMw: number;
+  peakDemandMw: number | null;
+  peakReserveMw: number | null;
+  plants: Plant[];
+  /** ISO timestamp of when we scraped it (LUMA doesn't publish one). */
+  fetchedAt: string;
 }
 
 export interface Outage {

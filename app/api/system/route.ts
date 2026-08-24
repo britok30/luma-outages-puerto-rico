@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
-import { fetchOutages } from "@/lib/stats";
+import { fetchSystemOverview } from "@/lib/stats";
 
 export async function GET() {
   try {
-    const data = await fetchOutages();
+    const data = await fetchSystemOverview();
     return NextResponse.json(data, {
       headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
     });
   } catch (e) {
-    console.error("Failed to fetch from LUMA API:", e);
+    console.error("Failed to fetch LUMA System Overview:", e);
     return NextResponse.json(
-      { error: "Failed to fetch outage data" },
+      { error: "Failed to fetch system overview" },
       { status: 502 }
     );
   }

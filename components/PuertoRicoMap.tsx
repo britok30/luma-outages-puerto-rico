@@ -1,10 +1,14 @@
 "use client";
 
-import { Feature } from "geojson";
-import { useCallback, useState, useMemo } from "react";
-import Map, { Layer, Source } from "react-map-gl/mapbox";
-import RegionsJSON from "../lib/puerto-rico.json";
-import { Regions } from "../lib/types";
+import "mapbox-gl/dist/mapbox-gl.css";
+import type { Feature, FeatureCollection, Geometry } from "geojson";
+import type { MapLayerMouseEvent } from "mapbox-gl";
+import { useCallback, useMemo, useState } from "react";
+import MapGL, { Layer, NavigationControl, Source } from "react-map-gl/mapbox";
+import RegionsJSON from "@/lib/puerto-rico.json";
+import { Regions } from "@/lib/types";
+import { useLang, formatNumber } from "@/lib/i18n";
+import { severityHex as severityColor } from "./RegionLedger";
 
 interface HoverInfo {
   x: number;
@@ -12,128 +16,203 @@ interface HoverInfo {
   feature: Feature;
 }
 
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "";
+
+/** Puerto Rico incl. Vieques and Culebra, with a little breathing room. */
+const PR_BOUNDS: [[number, number], [number, number]] = [
+  [-67.4, 17.85],
+  [-65.15, 18.6],
+];
+
+const normalize = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .trim()
+    .toLowerCase();
+
+const SEVERITY_STEPS: Array<[number, string]> = [
+  [0, severityColor(0)],
+  [1, severityColor(1)],
+  [5, severityColor(5)],
+  [20, severityColor(20)],
+  [50, severityColor(50)],
+];
+
 export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
+  const { t } = useLang();
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
 
-  const onHover = useCallback((event: mapboxgl.MapLayerMouseEvent) => {
-    event.originalEvent.preventDefault();
-    event.originalEvent.stopPropagation();
-    const {
-      features,
-      point: { x, y },
-    } = event;
-    const hoveredFeature = features && features[0];
+  const data = useMemo<FeatureCollection<Geometry>>(() => {
+    const byName = new Map(regions.map((r) => [normalize(r.name), r]));
+    const base = RegionsJSON as FeatureCollection<Geometry>;
+    return {
+      type: "FeatureCollection",
+      features: base.features.map((f) => {
+        const name: string = f.properties?.name ?? "";
+        const region = byName.get(normalize(name));
+        const pct = region?.percentageClientsWithoutService ?? 0;
+        return {
+          ...f,
+          id: f.properties?.id,
+          properties: {
+            ...f.properties,
+            name: region?.name ?? name,
+            hasData: !!region,
+            totalClients: region?.totalClients ?? 0,
+            totalClientsWithoutService: region?.totalClientsWithoutService ?? 0,
+            pct,
+          },
+        };
+      }),
+    };
+  }, [regions]);
 
-    if (hoveredFeature) {
-      setHoverInfo({ feature: hoveredFeature, x, y });
+  const onMove = useCallback((event: MapLayerMouseEvent) => {
+    const feature = event.features?.[0];
+    if (feature) {
+      setHoverInfo({ feature, x: event.point.x, y: event.point.y });
     } else {
       setHoverInfo(null);
     }
   }, []);
 
-  const REGION_COLORS: Record<string, string> = {
-    Arecibo: "#6366f1",   // indigo
-    Bayamon: "#f59e0b",   // amber
-    Caguas: "#10b981",    // emerald
-    Carolina: "#3b82f6",  // blue
-    Mayaguez: "#ef4444",  // red
-    Ponce: "#8b5cf6",     // violet
-    "San Juan": "#ec4899", // pink
-  };
+  const onLeave = useCallback(() => setHoverInfo(null), []);
 
-  const updateJSON = (
-    featureCollection: GeoJSON.FeatureCollection<GeoJSON.Geometry>
-  ): GeoJSON.FeatureCollection<GeoJSON.Geometry> => {
-    const { features } = featureCollection;
-    return {
-      type: "FeatureCollection",
-      features: features.map((f, index) => {
-        const name = regions[index]?.name || f.properties?.name || "";
-        const properties = {
-          ...f.properties,
-          totalClients: regions[index]?.totalClients || 0,
-          totalClientsWithoutService:
-            regions[index]?.totalClientsWithoutService || 0,
-          percentageClientsWithoutService:
-            regions[index]?.percentageClientsWithoutService || 0,
-          color: REGION_COLORS[name] || "#4BA3C3",
-        };
-        return { ...f, properties };
-      }),
-    };
-  };
-
-  const data = useMemo(() => {
-    return updateJSON(
-      RegionsJSON as GeoJSON.FeatureCollection<GeoJSON.Geometry>
+  if (!MAPBOX_TOKEN) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-sm text-moss-2 p-6 text-center">
+        {t(
+          "El mapa no está disponible (falta la clave de Mapbox).",
+          "Map unavailable (Mapbox token not configured)."
+        )}
+      </div>
     );
-  }, [regions]);
+  }
 
   return (
     <div className="w-full h-full relative">
-      <Map
+      <MapGL
         initialViewState={{
-          longitude: -66.5901,
-          latitude: 18.2208,
-          zoom: 7.3,
+          bounds: PR_BOUNDS,
+          fitBoundsOptions: { padding: 24 },
         }}
         scrollZoom={false}
+        touchPitch={false}
+        dragRotate={false}
         mapStyle="mapbox://styles/mapbox/light-v11"
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""}
-        onMouseMove={onHover}
+        mapboxAccessToken={MAPBOX_TOKEN}
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        onClick={onMove}
         interactiveLayerIds={["fillLayer"]}
+        cursor={hoverInfo ? "pointer" : "grab"}
+        attributionControl={false}
+        style={{ width: "100%", height: "100%" }}
       >
+        <NavigationControl position="top-right" showCompass={false} />
         <Source id="puerto-rico" type="geojson" data={data}>
           <Layer
             id="fillLayer"
             type="fill"
-            source="puerto-rico"
             paint={{
-              "fill-color": ["get", "color"],
-              "fill-opacity": 0.45,
+              "fill-color": [
+                "step",
+                ["get", "pct"],
+                SEVERITY_STEPS[0][1],
+                SEVERITY_STEPS[1][0],
+                SEVERITY_STEPS[1][1],
+                SEVERITY_STEPS[2][0],
+                SEVERITY_STEPS[2][1],
+                SEVERITY_STEPS[3][0],
+                SEVERITY_STEPS[3][1],
+                SEVERITY_STEPS[4][0],
+                SEVERITY_STEPS[4][1],
+              ],
+              "fill-opacity": 0.75,
             }}
           />
           <Layer
             id="lineLayer"
             type="line"
-            source="puerto-rico"
-            paint={{
-              "line-color": "#333",
-              "line-width": 1,
-            }}
+            paint={{ "line-color": "#0a1a3f", "line-width": 0.8 }}
           />
         </Source>
-      </Map>
+      </MapGL>
+
       {hoverInfo && <Tooltip hoverInfo={hoverInfo} />}
+
+      <Legend />
+    </div>
+  );
+};
+
+const Legend = () => {
+  const { t } = useLang();
+  const labels = ["<1%", "1–5%", "5–20%", "20–50%", "≥50%"];
+  return (
+    <div
+      aria-label={t("Leyenda", "Legend")}
+      className="absolute left-4 bottom-4 z-10 bg-cream/90 backdrop-blur-sm border border-cream-3 px-3 py-2.5 text-[11px] text-moss"
+    >
+      <p className="eyebrow text-ink mb-2">
+        {t("Sin servicio", "Without service")}
+      </p>
+      <ul className="flex flex-wrap gap-x-3 gap-y-1">
+        {SEVERITY_STEPS.map(([, color], i) => (
+          <li key={color} className="flex items-center gap-1">
+            <span
+              className="inline-block w-2.5 h-2.5"
+              style={{ backgroundColor: color }}
+              aria-hidden
+            />
+            {labels[i]}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
 const Tooltip = ({ hoverInfo }: { hoverInfo: HoverInfo }) => {
+  const { t } = useLang();
+  const p = hoverInfo.feature.properties ?? {};
+  const pct = Number(p.pct ?? 0);
+
   return (
     <div
-      className="absolute z-10 bg-white text-gray-800 p-2 rounded-lg shadow-lg text-left whitespace-nowrap"
+      role="tooltip"
+      className="absolute z-10 bg-ink text-cream px-3.5 py-2.5 text-left whitespace-nowrap shadow-[0_10px_30px_rgba(10,26,63,0.35)]"
       style={{
         left: hoverInfo.x,
         top: hoverInfo.y,
-        transform: "translate(-50%, -120%)",
+        transform: "translate(-50%, -115%)",
         pointerEvents: "none",
       }}
     >
-      <h3 className="font-bold text-sm">
-        Region | Región: {hoverInfo.feature.properties?.name}
-      </h3>
-      <ul className="flex flex-col text-xs">
-        <li>Total Clients | Clientes Totales: {hoverInfo.feature.properties?.totalClients}</li>
-        <li>
-          Without Service | Sin Servicio:{" "}
-          {hoverInfo.feature.properties?.totalClientsWithoutService}
-        </li>
-        <li>
-          Percentage Without Service | Porcentaje Sin Servicio:{" "}
-          {hoverInfo.feature.properties?.percentageClientsWithoutService}%
-        </li>
-      </ul>
+      <div className="flex items-center gap-2 mb-1">
+        <span
+          className="inline-block w-2 h-2"
+          style={{ backgroundColor: severityColor(pct) }}
+          aria-hidden
+        />
+        <h3 className="font-semibold text-sm">{p.name}</h3>
+      </div>
+      {p.hasData ? (
+        <ul className="text-xs space-y-0.5 tabular-nums">
+          <li>
+            <span className="text-moss-2">{t("Sin servicio", "Without service")}:</span>{" "}
+            <span className="font-semibold">{formatNumber(p.totalClientsWithoutService)}</span>{" "}
+            ({pct.toFixed(1)}%)
+          </li>
+          <li>
+            <span className="text-moss-2">{t("Clientes totales", "Total customers")}:</span>{" "}
+            {formatNumber(p.totalClients)}
+          </li>
+        </ul>
+      ) : (
+        <p className="text-xs text-moss">{t("Sin datos", "No data")}</p>
+      )}
     </div>
   );
 };

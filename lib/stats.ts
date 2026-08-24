@@ -1,38 +1,158 @@
-import { CensusData, Outage } from "./types";
+import { CensusData, Outage, Plant, SystemOverview } from "./types";
+
+const LUMA_URL =
+  "https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService";
+const LUMA_OVERVIEW_URL = "https://lumapr.com/system-overview/?lang=en";
+
+/**
+ * LUMA sits behind Incapsula, which challenges requests that don't look like a
+ * browser. These headers get a clean 200 where a bare fetch gets an HTML page.
+ */
+const LUMA_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Safari/537.36",
+  "Accept-Language": "es-PR,es;q=0.9,en;q=0.8",
+  Referer: "https://miluma.lumapr.com/",
+};
+
+const isOutage = (value: unknown): value is Outage => {
+  if (!value || typeof value !== "object") return false;
+  const v = value as Partial<Outage>;
+  return (
+    Array.isArray(v.regions) &&
+    !!v.totals &&
+    typeof v.totals.totalClientsWithoutService === "number"
+  );
+};
+
+/**
+ * Fetches the current LUMA outage snapshot. Throws on network/HTTP failure or
+ * an unexpected payload (LUMA's WAF sometimes answers with an HTML challenge).
+ */
+export const fetchOutages = async (): Promise<Outage> => {
+  const response = await fetch(LUMA_URL, {
+    headers: { ...LUMA_HEADERS, Accept: "application/json" },
+    next: { revalidate: 300 }, // 5 minutes
+  });
+
+  if (!response.ok) {
+    throw new Error(`LUMA API error: ${response.status} ${response.statusText}`);
+  }
+
+  const data: unknown = await response.json();
+  if (!isOutage(data)) {
+    throw new Error("LUMA API returned an unexpected payload");
+  }
+  return data;
+};
+
+const num = (v: string | undefined) => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+};
+
+/**
+ * Scrapes LUMA's System Overview page. Values live in
+ * `<div class="gauge-container" data-value="…"><h3 class="label">…</h3>…<span class="max-text">…</span>`
+ * and the peak forecast in `.peak-text`. Parsed by label, not by id — the ids
+ * on that page are duplicated and mislabeled.
+ */
+export const parseSystemOverview = (html: string, fetchedAt: string): SystemOverview => {
+  const gaugeRe =
+    /class="gauge-container"\s+data-value="([^"]+)"[\s\S]*?<h3 class="label">([^<]+)<\/h3>[\s\S]*?<span class="max-text"[^>]*>([^<]*)<\/span>/g;
+  const gauges: Array<{ label: string; value: number; max: number | null }> = [];
+  for (const m of html.matchAll(gaugeRe)) {
+    const value = num(m[1]);
+    if (value === null) continue;
+    gauges.push({ label: m[2].trim(), value, max: num(m[3].trim()) });
+  }
+
+  const byLabel = (label: string) =>
+    gauges.find((g) => g.label.toLowerCase() === label.toLowerCase());
+  const demand = byLabel("Current Demand");
+  const nextHour = byLabel("Next Hour Demand");
+  const reserve = byLabel("Current Reserves");
+  if (!demand || !nextHour || !reserve) {
+    throw new Error("System Overview page changed: core gauges not found");
+  }
+
+  const peakRe =
+    /<p class='peak-label'>([^<]+)<\/p>\s*<p class='peak-text'>([\d.]+)<span>MW<\/span><\/p>/g;
+  const peaks = new Map<string, number | null>();
+  for (const m of html.matchAll(peakRe)) peaks.set(m[1].trim(), num(m[2]));
+
+  const SYSTEM_LABELS = new Set(["current demand", "next hour demand", "current reserves"]);
+  const plants: Plant[] = gauges
+    .filter((g) => !SYSTEM_LABELS.has(g.label.toLowerCase()))
+    .map((g) => ({ name: g.label, mw: g.value, maxMw: g.max }));
+
+  return {
+    demandMw: demand.value,
+    nextHourDemandMw: nextHour.value,
+    reserveMw: reserve.value,
+    peakDemandMw: peaks.get("Peak Demand") ?? null,
+    peakReserveMw: peaks.get("Peak Reserve") ?? null,
+    plants,
+    fetchedAt,
+  };
+};
+
+export const fetchSystemOverview = async (): Promise<SystemOverview> => {
+  const response = await fetch(LUMA_OVERVIEW_URL, {
+    headers: { ...LUMA_HEADERS, Accept: "text/html" },
+    next: { revalidate: 300 },
+  });
+  if (!response.ok) {
+    throw new Error(`LUMA System Overview error: ${response.status} ${response.statusText}`);
+  }
+  const html = await response.text();
+  return parseSystemOverview(html, new Date().toISOString());
+};
+
+export const getSystemOverview = async (): Promise<SystemOverview | null> => {
+  try {
+    return await fetchSystemOverview();
+  } catch (e) {
+    console.error("Failed to fetch LUMA System Overview:", e);
+    return null;
+  }
+};
 
 export const getClientsWithoutService = async (): Promise<Outage | null> => {
   try {
-    const response = await fetch(
-      "https://api.miluma.lumapr.com/miluma-outage-api/outage/regionsWithoutService",
-      {
-        next: {
-          revalidate: 300, // Revalidate data every 5 minutes
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch clients: ${response.statusText}`);
-    }
-
-    const outages: Outage = await response.json();
-    return outages;
+    return await fetchOutages();
   } catch (e) {
     console.error("Failed to fetch clients:", e);
     return null;
   }
 };
-
 const CENSUS_YEAR = 2024;
 const PR_FIPS = "72";
+// api.census.gov redirects keyless requests to /data/missing_key.html.
+// Get a free key at https://api.census.gov/data/key_signup.html
+const CENSUS_API_KEY = process.env.CENSUS_API_KEY;
 
 async function fetchCensus(url: string): Promise<string[][]> {
-  const res = await fetch(url, { next: { revalidate: 86400 } });
-  if (!res.ok) throw new Error(`Census API error: ${res.statusText}`);
+  const keyed = CENSUS_API_KEY
+    ? `${url}&key=${encodeURIComponent(CENSUS_API_KEY)}`
+    : url;
+  const res = await fetch(keyed, {
+    headers: { Accept: "application/json" },
+    next: { revalidate: 86400 }, // 24 hours
+  });
+  if (!res.ok) throw new Error(`Census API error: ${res.status} ${res.statusText}`);
+  const contentType = res.headers.get("content-type") ?? "";
+  if (!contentType.includes("json")) {
+    throw new Error(`Census API returned ${contentType || "an unknown content type"} instead of JSON`);
+  }
   return res.json();
 }
 
 export const getCensusData = async (): Promise<CensusData | null> => {
+  if (!CENSUS_API_KEY) {
+    console.warn("CENSUS_API_KEY is not set; skipping Census data.");
+    return null;
+  }
   try {
     const [povertyRaw, incomeRaw, wageRaw, employRaw, eduRaw, healthRaw] =
       await Promise.all([
