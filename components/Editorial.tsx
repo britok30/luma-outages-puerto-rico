@@ -89,10 +89,17 @@ export const BigStat = ({
     lg: "text-5xl sm:text-6xl lg:text-7xl",
     xl: "text-6xl sm:text-7xl lg:text-8xl",
   };
+  // Labels sit one step below the value so long words don't overrun narrow columns.
+  const labelSizes = {
+    sm: "text-2xl sm:text-3xl",
+    md: "text-3xl sm:text-4xl",
+    lg: "text-4xl sm:text-5xl",
+    xl: "text-5xl sm:text-6xl lg:text-7xl",
+  };
   return (
-    <div className={className}>
+    <div className={`min-w-0 ${className}`}>
       <p className={`display tabular-nums whitespace-nowrap ${sizes[size]}`}>{value}</p>
-      <p className={`display ${sizes[size]} ${muted}`}>{label}</p>
+      <p className={`display break-words ${labelSizes[size]} ${muted}`}>{label}</p>
       {note && <p className="mt-4 text-base sm:text-lg opacity-80">{note}</p>}
     </div>
   );

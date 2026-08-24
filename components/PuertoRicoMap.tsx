@@ -3,8 +3,8 @@
 import "mapbox-gl/dist/mapbox-gl.css";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 import type { MapLayerMouseEvent } from "mapbox-gl";
-import { useCallback, useMemo, useState } from "react";
-import MapGL, { Layer, NavigationControl, Source } from "react-map-gl/mapbox";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import MapGL, { Layer, NavigationControl, Source, type MapRef } from "react-map-gl/mapbox";
 import RegionsJSON from "@/lib/puerto-rico.json";
 import { Regions } from "@/lib/types";
 import { useLang, formatNumber } from "@/lib/i18n";
@@ -42,6 +42,17 @@ const SEVERITY_STEPS: Array<[number, string]> = [
 export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
   const { t } = useLang();
   const [hoverInfo, setHoverInfo] = useState<HoverInfo | null>(null);
+  const mapRef = useRef<MapRef>(null);
+
+  // The map mounts (lazily) inside an absolutely-positioned grid cell and can
+  // capture a stale container size, leaving tiles to render in a small square
+  // and `load` never firing. Re-measure a few times after mount and whenever
+  // the style (re)loads.
+  const resize = useCallback(() => mapRef.current?.resize(), []);
+  useEffect(() => {
+    const timers = [100, 500, 1500, 3000].map((ms) => setTimeout(resize, ms));
+    return () => timers.forEach(clearTimeout);
+  }, [resize]);
 
   const data = useMemo<FeatureCollection<Geometry>>(() => {
     const byName = new Map(regions.map((r) => [normalize(r.name), r]));
@@ -93,6 +104,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
   return (
     <div className="w-full h-full relative">
       <MapGL
+        ref={mapRef}
         initialViewState={{
           bounds: PR_BOUNDS,
           fitBoundsOptions: { padding: 24 },
@@ -100,8 +112,20 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
         scrollZoom={false}
         touchPitch={false}
         dragRotate={false}
-        mapStyle="mapbox://styles/mapbox/light-v11"
+        mapStyle="mapbox://styles/mapbox/standard"
+        config={{
+          basemap: {
+            theme: "monochrome",
+            lightPreset: "day",
+            showPointOfInterestLabels: false,
+            showTransitLabels: false,
+            showRoadLabels: false,
+            show3dObjects: false,
+          },
+        }}
         mapboxAccessToken={MAPBOX_TOKEN}
+        onLoad={resize}
+        onStyleData={resize}
         onMouseMove={onMove}
         onMouseLeave={onLeave}
         onClick={onMove}
@@ -115,6 +139,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
           <Layer
             id="fillLayer"
             type="fill"
+            slot="middle"
             paint={{
               "fill-color": [
                 "step",
@@ -135,6 +160,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
           <Layer
             id="lineLayer"
             type="line"
+            slot="middle"
             paint={{ "line-color": "#0a1a3f", "line-width": 0.8 }}
           />
         </Source>
