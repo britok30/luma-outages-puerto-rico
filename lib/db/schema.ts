@@ -1,4 +1,5 @@
 import {
+  bigint,
   index,
   integer,
   jsonb,
@@ -52,6 +53,8 @@ export const systemSnapshots = pgTable(
   {
     id: serial("id").primaryKey(),
     capturedAt: timestamp("captured_at", { withTimezone: true }).notNull().defaultNow(),
+    /** floor(epoch / 300): one row per 5-minute wall-clock bucket, enforced by the DB. */
+    bucket: bigint("bucket", { mode: "number" }).notNull().unique(),
     demandMw: integer("demand_mw").notNull(),
     nextHourDemandMw: integer("next_hour_demand_mw").notNull(),
     reserveMw: integer("reserve_mw").notNull(),

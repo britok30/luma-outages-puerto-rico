@@ -1,4 +1,4 @@
-import { and, desc, gte, sql } from "drizzle-orm";
+import { and, gte, sql } from "drizzle-orm";
 import { revalidateTag, unstable_cache } from "next/cache";
 import type { Outage, SystemOverview } from "../types";
 import { parseLumaTimestamp } from "../time";
@@ -58,31 +58,33 @@ export const recordOutageSnapshot = async (outage: Outage): Promise<boolean> => 
   }
 };
 
-const SYSTEM_MIN_INTERVAL_MS = 4 * 60 * 1000;
+export const SYSTEM_BUCKET_MS = 5 * 60 * 1000;
 
-/** Persists a System Overview reading, at most once every ~5 minutes. */
+/**
+ * Persists a System Overview reading, at most once per 5-minute bucket. The
+ * unique index on `bucket` makes this atomic, so concurrent callers (cron +
+ * visitor-triggered writes) can't both insert.
+ */
 export const recordSystemSnapshot = async (system: SystemOverview): Promise<boolean> => {
   const db = getDb();
   if (!db) return false;
   try {
-    const [last] = await db
-      .select({ capturedAt: systemSnapshots.capturedAt })
-      .from(systemSnapshots)
-      .orderBy(desc(systemSnapshots.capturedAt))
-      .limit(1);
-    if (last && Date.now() - last.capturedAt.getTime() < SYSTEM_MIN_INTERVAL_MS) return false;
-
     const generationMw = system.plants.reduce((s, p) => s + p.mw, 0);
-    await db.insert(systemSnapshots).values({
-      demandMw: Math.round(system.demandMw),
-      nextHourDemandMw: Math.round(system.nextHourDemandMw),
-      reserveMw: Math.round(system.reserveMw),
-      peakDemandMw: system.peakDemandMw === null ? null : Math.round(system.peakDemandMw),
-      peakReserveMw: system.peakReserveMw === null ? null : Math.round(system.peakReserveMw),
-      generationMw: generationMw.toFixed(2),
-      plants: system.plants,
-    });
-    return true;
+    const inserted = await db
+      .insert(systemSnapshots)
+      .values({
+        bucket: Math.floor(Date.now() / SYSTEM_BUCKET_MS),
+        demandMw: Math.round(system.demandMw),
+        nextHourDemandMw: Math.round(system.nextHourDemandMw),
+        reserveMw: Math.round(system.reserveMw),
+        peakDemandMw: system.peakDemandMw === null ? null : Math.round(system.peakDemandMw),
+        peakReserveMw: system.peakReserveMw === null ? null : Math.round(system.peakReserveMw),
+        generationMw: generationMw.toFixed(2),
+        plants: system.plants,
+      })
+      .onConflictDoNothing({ target: systemSnapshots.bucket })
+      .returning({ id: systemSnapshots.id });
+    return inserted.length > 0;
   } catch (e) {
     console.error("recordSystemSnapshot failed:", e);
     return false;
