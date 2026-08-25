@@ -31,7 +31,28 @@ yarn dev
 | Name | Purpose |
 | --- | --- |
 | `NEXT_PUBLIC_MAPBOX_TOKEN` | Mapbox public access token used by the outage map |
+| `DATABASE_URL` | Neon Postgres connection string. Enables outage history (`/api/history`, the History section). Optional — everything else works without it. |
+| `CRON_SECRET` | Bearer token required by `/api/cron/snapshot`. Set the same value as a GitHub Actions secret. |
 | `CENSUS_API_KEY` | U.S. Census Bureau API key (free: https://api.census.gov/data/key_signup.html). Without it the Census API redirects to an HTML page and the demographic sections are skipped. |
+
+## Outage history (Neon + Drizzle)
+
+LUMA only exposes the current state, so the site records it:
+
+- `lib/db/schema.ts` — `outage_snapshots` (one row per distinct LUMA update, deduplicated on LUMA's timestamp), `region_snapshots`, `system_snapshots` (grid demand/reserve, ~every 5 min).
+- Writes happen in two places: as a side effect of `/api/outages` and `/api/system` (`after()`, so responses aren't delayed), and from `/api/cron/snapshot`, which `.github/workflows/snapshot.yml` calls every 5 minutes. Both paths are idempotent.
+- `/api/history?range=24h|7d|30d` serves the series; `components/History.tsx` draws it with plain SVG.
+
+Setup:
+
+```bash
+# 1. create a Neon project, copy the pooled connection string into .env.local as DATABASE_URL
+# 2. create the tables
+yarn db:push
+# 3. on Vercel: add DATABASE_URL and CRON_SECRET; on GitHub: add CRON_SECRET as an Actions secret
+```
+
+`yarn db:studio` opens Drizzle Studio against the database.
 
 ## Data sources
 

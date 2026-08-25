@@ -6,12 +6,15 @@ import Petitions from "@/components/Petitions";
 import { Census } from "@/components/Census";
 import { OutageDataProvider } from "@/components/OutageDataProvider";
 import { GridHealth } from "@/components/GridHealth";
+import { History } from "@/components/History";
+import { getHistory } from "@/lib/db/snapshots";
 
 export default async function Home() {
-  const [clients, census, system] = await Promise.all([
+  const [clients, census, system, history] = await Promise.all([
     getClientsWithoutService(),
     getCensusData(),
     getSystemOverview(),
+    getHistory("7d"),
   ]);
 
   return (
@@ -20,6 +23,7 @@ export default async function Home() {
       <main className="flex-1">
         <OutageDataProvider fallbackData={clients ?? undefined} />
         <GridHealth fallbackData={system ?? undefined} />
+        {history && <History fallbackData={history} />}
         {census && <Census data={census} />}
         <HelpPR />
         <Petitions />

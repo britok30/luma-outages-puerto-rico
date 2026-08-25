@@ -1,0 +1,19 @@
+name: Snapshot LUMA outages
+
+# GitHub's cron has ~5 min granularity and can be delayed a few minutes; the
+# endpoint deduplicates on LUMA's own timestamp so overlapping runs are harmless.
+# (Vercel Cron on the Hobby plan only allows one run per day, hence this.)
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Record snapshot
+        run: |
+          curl --fail --silent --show-error --max-time 60 \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "https://www.apagonpuertorico.com/api/cron/snapshot"

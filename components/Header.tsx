@@ -56,6 +56,9 @@ export const Header = () => {
           <a href="#regions" className="hover:text-cream transition-colors">
             {t("Regiones", "Regions")}
           </a>
+          <a href="#history" className="hover:text-cream transition-colors">
+            {t("Historial", "History")}
+          </a>
           <a href="#census" className="hover:text-cream transition-colors">
             {t("Contexto", "Context")}
           </a>

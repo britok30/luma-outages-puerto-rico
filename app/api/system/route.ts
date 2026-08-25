@@ -1,9 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { fetchSystemOverview } from "@/lib/stats";
+import { recordSystemSnapshot } from "@/lib/db/snapshots";
 
 export async function GET() {
   try {
     const data = await fetchSystemOverview();
+    after(() => recordSystemSnapshot(data));
     return NextResponse.json(data, {
       headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
     });
