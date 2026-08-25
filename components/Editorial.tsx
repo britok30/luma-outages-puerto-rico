@@ -141,7 +141,8 @@ export const BarList = ({
   muted = "text-moss",
   format = (v: number) => `${v}${unit}`,
 }: {
-  items: Array<{ label: string; value: number; note?: string; fill?: string }>;
+  /** `max` on an item scales that bar against its own ceiling (e.g. plant capacity). */
+  items: Array<{ label: string; value: number; max?: number; note?: string; fill?: string }>;
   max?: number;
   unit?: string;
   track?: string;
@@ -155,7 +156,8 @@ export const BarList = ({
   return (
     <ul className={`divide-y ${divider}`}>
       {items.map((it, i) => {
-        const pct = Math.max(0, Math.min(100, (it.value / top) * 100));
+        const ceiling = it.max && it.max > 0 ? it.max : top;
+        const pct = Math.max(0, Math.min(100, (it.value / ceiling) * 100));
         return (
           <li key={it.label} className="py-4 first:pt-0">
             <div className="flex items-baseline justify-between gap-6">
@@ -168,7 +170,7 @@ export const BarList = ({
               role="progressbar"
               aria-label={it.label}
               aria-valuemin={0}
-              aria-valuemax={top}
+              aria-valuemax={ceiling}
               aria-valuenow={it.value}
               className={`mt-2.5 h-[3px] w-full ${track}`}
             >

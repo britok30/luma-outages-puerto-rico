@@ -42,7 +42,7 @@ export const RegionLedger = ({ regions }: { regions: Regions[] }) => {
                 role="progressbar"
                 aria-label={`${r.name}: ${pct.toFixed(1)}% ${t("sin servicio", "without service")}`}
                 aria-valuemin={0}
-                aria-valuemax={100}
+                aria-valuemax={Math.round(top * 10) / 10}
                 aria-valuenow={Math.round(pct * 10) / 10}
                 className="mt-4 h-[3px] w-full bg-cream-3"
               >

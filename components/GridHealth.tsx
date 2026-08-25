@@ -123,7 +123,11 @@ export const GridHealth = ({ fallbackData }: { fallbackData?: SystemOverview }) 
           items={plants.map((p) => ({
             label: p.name,
             value: p.mw,
-            note: p.maxMw ? `${t("capacidad", "capacity")} ${formatNumber(p.maxMw)} MW` : undefined,
+            // Bar = utilization against the plant's own capacity, matching the note below it.
+            max: p.maxMw ?? undefined,
+            note: p.maxMw
+              ? `${Math.round((p.mw / p.maxMw) * 100)}% ${t("de", "of")} ${formatNumber(p.maxMw)} MW ${t("de capacidad", "capacity")}`
+              : undefined,
           }))}
           format={(v) => `${formatNumber(Math.round(v))} MW`}
           track="bg-ink-3"

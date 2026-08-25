@@ -141,6 +141,7 @@ export const Census = ({ data }: { data: CensusData }) => {
             {t("Hogares por nivel de ingreso", "Households by income bracket")}
           </Eyebrow>
           <BarList
+            max={100}
             items={income.brackets.map((b) => ({ label: b.label, value: b.percentage }))}
             track="bg-ink-3"
             fill="bg-sky"
