@@ -81,14 +81,17 @@ export const OutageDataProvider = ({ fallbackData }: { fallbackData?: Outage }) 
                     : t("En vivo · Puerto Rico", "Live · Puerto Rico")}
                 </Eyebrow>
 
-                <div className="mt-10 lg:mt-16 reveal" style={{ animationDelay: "120ms" }}>
-                  <p className="display text-[4.5rem] sm:text-[6rem] lg:text-[7.5rem] tabular-nums">
+                <h1 className="mt-10 lg:mt-16 reveal" style={{ animationDelay: "120ms" }}>
+                  <span className="sr-only">
+                    {t("Apagones en Puerto Rico ahora mismo: ", "Puerto Rico power outages right now: ")}
+                  </span>
+                  <span className="block display text-[4.5rem] sm:text-[6rem] lg:text-[7.5rem] tabular-nums">
                     {formatNumber(without)}
-                  </p>
-                  <p className="display text-[2.25rem] sm:text-[3rem] lg:text-[3.5rem] text-sky mt-2">
+                  </span>{" "}
+                  <span className="block display text-[2.25rem] sm:text-[3rem] lg:text-[3.5rem] text-sky mt-2">
                     {t("clientes sin luz", "customers without power")}
-                  </p>
-                </div>
+                  </span>
+                </h1>
 
                 <p
                   className="mt-8 text-lg sm:text-xl text-cream/80 max-w-md reveal"

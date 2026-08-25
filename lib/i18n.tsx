@@ -36,6 +36,11 @@ export function LanguageProvider({
     setLangState(next);
     document.documentElement.lang = next;
     document.cookie = `${LANG_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
+    // Keep the URL shareable/indexable: English lives at ?lang=en.
+    const url = new URL(window.location.href);
+    if (next === "en") url.searchParams.set("lang", "en");
+    else url.searchParams.delete("lang");
+    window.history.replaceState(null, "", url.pathname + url.search + url.hash);
   }, []);
 
   const value = useMemo(() => ({ lang, setLang }), [lang, setLang]);

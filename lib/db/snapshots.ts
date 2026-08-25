@@ -1,4 +1,5 @@
 import { and, desc, gte, sql } from "drizzle-orm";
+import { revalidateTag, unstable_cache } from "next/cache";
 import type { Outage, SystemOverview } from "../types";
 import { parseLumaTimestamp } from "../time";
 import { getDb, schema } from "./index";
@@ -35,6 +36,7 @@ export const recordOutageSnapshot = async (outage: Outage): Promise<boolean> => 
 
     const snapshotId = inserted[0]?.id;
     if (!snapshotId) return false; // already recorded
+    revalidateTag("history", "max");
 
     if (outage.regions.length) {
       await db.insert(regionSnapshots).values(
@@ -126,7 +128,7 @@ const downsample = <T>(rows: T[], max: number): T[] => {
   return out;
 };
 
-export const getHistory = async (range: HistoryRange = "7d"): Promise<History | null> => {
+const queryHistory = async (range: HistoryRange): Promise<History | null> => {
   const db = getDb();
   if (!db) return null;
   try {
@@ -167,3 +169,12 @@ export const getHistory = async (range: HistoryRange = "7d"): Promise<History | 
     return null;
   }
 };
+
+/** Cached for 5 minutes (and busted whenever a new snapshot lands). */
+export const getHistory = (range: HistoryRange = "7d") =>
+  process.env.DATABASE_URL
+    ? unstable_cache(() => queryHistory(range), ["history", range], {
+        revalidate: 300,
+        tags: ["history"],
+      })()
+    : Promise.resolve(null);

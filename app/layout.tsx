@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans } from "next/font/google";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { LanguageProvider } from "@/lib/i18n";
@@ -19,48 +19,79 @@ export const viewport: Viewport = {
   themeColor: "#1c1b17",
 };
 
-export const metadata: Metadata = {
-  title:
-    "Apagón Puerto Rico | Apagones en Tiempo Real | Real-Time Power Outages",
-  description:
-    "Mantente informado sobre apagones en Puerto Rico con datos de LUMA actualizados cada 5 minutos, por región y en el mapa. Track power outages across Puerto Rico in real time.",
-  metadataBase: new URL("https://www.apagonpuertorico.com"),
-  openGraph: {
-    title: "Apagón Puerto Rico | Apagones en Tiempo Real",
+const BASE = "https://www.apagonpuertorico.com";
+
+const COPY = {
+  es: {
+    title: "Apagones en Puerto Rico en tiempo real | Apagón Puerto Rico",
     description:
-      "Clientes sin servicio eléctrico en Puerto Rico, por región y en el mapa. Datos de LUMA actualizados cada 5 minutos.",
-    url: "https://www.apagonpuertorico.com",
-    siteName: "Apagón Puerto Rico",
-    images: ["/pr.jpg"],
-    type: "website",
-    locale: "es_PR",
-    alternateLocale: ["en_US"],
+      "Cuántos clientes están sin luz ahora mismo en Puerto Rico, por región y en el mapa. Datos de LUMA actualizados cada 5 minutos, con historial.",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Apagón Puerto Rico | Apagones en Tiempo Real",
+  en: {
+    title: "Puerto Rico power outages in real time | Apagón Puerto Rico",
     description:
-      "Clientes sin servicio eléctrico en Puerto Rico, por región y en el mapa. Datos de LUMA actualizados cada 5 minutos.",
-    site: "@britoszn",
-    creator: "@britoszn",
-    images: ["/pr.jpg"],
+      "How many customers are without power in Puerto Rico right now, by region and on the map. LUMA data refreshed every 5 minutes, with history.",
   },
-  alternates: { canonical: "https://www.apagonpuertorico.com" },
-  keywords: [
-    "Puerto Rico", "apagones", "apagón", "power outages", "LUMA",
-    "LUMA Energy", "sin luz", "huracán", "hurricane", "electricidad",
-  ],
-  icons: { icon: "/favicon.ico" },
-  authors: [{ name: "Brito" }],
-};
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await resolveLang();
+  const c = COPY[lang];
+  const url = lang === "en" ? `${BASE}/?lang=en` : `${BASE}/`;
+  return {
+    title: c.title,
+    description: c.description,
+    metadataBase: new URL(BASE),
+    alternates: {
+      canonical: url,
+      languages: { "es-PR": `${BASE}/`, en: `${BASE}/?lang=en`, "x-default": `${BASE}/` },
+    },
+    openGraph: {
+      title: c.title,
+      description: c.description,
+      url,
+      siteName: "Apagón Puerto Rico",
+      type: "website",
+      locale: lang === "en" ? "en_US" : "es_PR",
+      alternateLocale: lang === "en" ? ["es_PR"] : ["en_US"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: c.title,
+      description: c.description,
+      site: "@britoszn",
+      creator: "@britoszn",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+    keywords: [
+      "Puerto Rico", "apagones", "apagón", "apagón hoy", "sin luz", "relevo de carga",
+      "LUMA", "LUMA Energy", "power outages", "huracán", "electricidad",
+    ],
+    authors: [{ name: "Brito", url: "https://x.com/britoszn" }],
+    creator: "Brito",
+  };
+}
+
+/** Language resolved by proxy.ts (`?lang=` or cookie), with a cookie fallback. */
+async function resolveLang(): Promise<Lang> {
+  const fromProxy = (await headers()).get("x-lang");
+  if (isLang(fromProxy)) return fromProxy;
+  const cookieLang = (await cookies()).get(LANG_COOKIE)?.value;
+  return isLang(cookieLang) ? cookieLang : "es";
+}
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cookieLang = (await cookies()).get(LANG_COOKIE)?.value;
-  const lang: Lang = isLang(cookieLang) ? cookieLang : "es";
+  const lang = await resolveLang();
 
   return (
     <html lang={lang} className={grotesk.variable}>

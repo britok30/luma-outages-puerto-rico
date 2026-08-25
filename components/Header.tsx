@@ -62,6 +62,9 @@ export const Header = () => {
           <a href="#census" className="hover:text-cream transition-colors">
             {t("Contexto", "Context")}
           </a>
+          <a href="#faq" className="hover:text-cream transition-colors">
+            {t("Preguntas", "FAQ")}
+          </a>
           <a href="#help" className="hover:text-cream transition-colors">
             {t("Ayuda", "Help")}
           </a>
