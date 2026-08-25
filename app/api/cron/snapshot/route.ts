@@ -5,9 +5,8 @@ import { recordOutageSnapshot, recordSystemSnapshot } from "@/lib/db/snapshots";
 export const dynamic = "force-dynamic";
 
 /**
- * Records a snapshot of LUMA's current state. Meant to be hit every ~5 min
- * by a scheduler (GitHub Actions workflow in .github/workflows/snapshot.yml,
- * or Vercel Cron). Protected by CRON_SECRET.
+ * Records a snapshot of LUMA's current state. Hit every 5 min by Vercel Cron
+ * (vercel.json), which sends `Authorization: Bearer $CRON_SECRET` automatically.
  */
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET;
