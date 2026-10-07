@@ -1,4 +1,5 @@
-import { and, gte, sql } from "drizzle-orm";
+import { desc, gte, sql } from "drizzle-orm";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import { revalidateTag, unstable_cache } from "next/cache";
 import type { Outage, SystemOverview } from "../types";
 import { parseLumaTimestamp } from "../time";
@@ -19,38 +20,41 @@ export const recordOutageSnapshot = async (outage: Outage): Promise<boolean> => 
     if (!observedAt) return false;
     const t = outage.totals;
 
-    const inserted = await db
-      .insert(outageSnapshots)
-      .values({
-        lumaTimestamp: outage.timestamp,
-        observedAt,
-        totalClients: t.totalClients,
-        withoutService: t.totalClientsWithoutService,
-        withService: t.totalClientsWithService,
-        planned: t.totalClientsAffectedByPlannedOutage ?? 0,
-        loadShed: t.totalClientsAffectedByLoadShed ?? 0,
-        pctWithout: String(t.totalPercentageWithoutService ?? 0),
-      })
-      .onConflictDoNothing({ target: outageSnapshots.lumaTimestamp })
-      .returning({ id: outageSnapshots.id });
+    const regions = outage.regions.map((r) => ({
+      name: r.name,
+      total_clients: r.totalClients,
+      without_service: r.totalClientsWithoutService,
+      planned: r.totalClientsAffectedByPlannedOutage ?? 0,
+      load_shed: r.totalClientsAffectedByLoadShed ?? 0,
+      pct_without: r.percentageClientsWithoutService ?? 0,
+    }));
 
-    const snapshotId = inserted[0]?.id;
-    if (!snapshotId) return false; // already recorded
+    // One statement so the snapshot and its regions land together or not at
+    // all: a failed region insert can't leave a snapshot that later calls skip.
+    const { rows } = await db.execute<{ id: number }>(sql`
+      with s as (
+        insert into ${outageSnapshots}
+          (luma_timestamp, observed_at, total_clients, without_service, with_service, planned, load_shed, pct_without)
+        values (
+          ${outage.timestamp}, ${observedAt.toISOString()}::timestamptz, ${t.totalClients},
+          ${t.totalClientsWithoutService}, ${t.totalClientsWithService},
+          ${t.totalClientsAffectedByPlannedOutage ?? 0}, ${t.totalClientsAffectedByLoadShed ?? 0},
+          ${t.totalPercentageWithoutService ?? 0}
+        )
+        on conflict (luma_timestamp) do nothing
+        returning id
+      ), r as (
+        insert into ${regionSnapshots}
+          (snapshot_id, name, total_clients, without_service, planned, load_shed, pct_without)
+        select s.id, r.name, r.total_clients, r.without_service, r.planned, r.load_shed, r.pct_without
+        from s cross join json_to_recordset(${JSON.stringify(regions)}::json)
+          as r(name text, total_clients int, without_service int, planned int, load_shed int, pct_without numeric)
+      )
+      select id from s
+    `);
+
+    if (!rows[0]) return false; // already recorded
     revalidateTag("history", "max");
-
-    if (outage.regions.length) {
-      await db.insert(regionSnapshots).values(
-        outage.regions.map((r) => ({
-          snapshotId,
-          name: r.name,
-          totalClients: r.totalClients,
-          withoutService: r.totalClientsWithoutService,
-          planned: r.totalClientsAffectedByPlannedOutage ?? 0,
-          loadShed: r.totalClientsAffectedByLoadShed ?? 0,
-          pctWithout: String(r.percentageClientsWithoutService ?? 0),
-        }))
-      );
-    }
     return true;
   } catch (e) {
     console.error("recordOutageSnapshot failed:", e);
@@ -120,14 +124,14 @@ export interface History {
   since: string | null;
 }
 
-/** Thin out a series so charts stay light: keep at most `max` points, preserving the last. */
-const downsample = <T>(rows: T[], max: number): T[] => {
-  if (rows.length <= max) return rows;
-  const step = rows.length / max;
-  const out: T[] = [];
-  for (let i = 0; i < max; i++) out.push(rows[Math.floor(i * step)]);
-  if (out[out.length - 1] !== rows[rows.length - 1]) out.push(rows[rows.length - 1]);
-  return out;
+/** Max points per series; history is bucketed in SQL to stay under it. */
+const MAX_POINTS = 600;
+
+/** Latest row per `date_bin` bucket, so long ranges don't ship every 5-min row. */
+const bucketOf = (column: AnyPgColumn, range: HistoryRange) => {
+  // Inlined (not a bind param) so DISTINCT ON and ORDER BY are the same expression.
+  const seconds = sql.raw(String(Math.ceil(RANGE_MS[range] / MAX_POINTS / 1000)));
+  return sql`date_bin(interval '${seconds} seconds', ${column}, timestamptz '2000-01-01')`;
 };
 
 const queryHistory = async (range: HistoryRange): Promise<History | null> => {
@@ -135,9 +139,11 @@ const queryHistory = async (range: HistoryRange): Promise<History | null> => {
   if (!db) return null;
   try {
     const from = new Date(Date.now() - RANGE_MS[range]);
+    const outageBucket = bucketOf(outageSnapshots.observedAt, range);
+    const systemBucket = bucketOf(systemSnapshots.capturedAt, range);
     const [outages, system, [first]] = await Promise.all([
       db
-        .select({
+        .selectDistinctOn([outageBucket], {
           t: outageSnapshots.observedAt,
           without: outageSnapshots.withoutService,
           planned: outageSnapshots.planned,
@@ -145,16 +151,16 @@ const queryHistory = async (range: HistoryRange): Promise<History | null> => {
         })
         .from(outageSnapshots)
         .where(gte(outageSnapshots.observedAt, from))
-        .orderBy(outageSnapshots.observedAt),
+        .orderBy(outageBucket, desc(outageSnapshots.observedAt)),
       db
-        .select({
+        .selectDistinctOn([systemBucket], {
           t: systemSnapshots.capturedAt,
           demand: systemSnapshots.demandMw,
           reserve: systemSnapshots.reserveMw,
         })
         .from(systemSnapshots)
-        .where(and(gte(systemSnapshots.capturedAt, from)))
-        .orderBy(systemSnapshots.capturedAt),
+        .where(gte(systemSnapshots.capturedAt, from))
+        .orderBy(systemBucket, desc(systemSnapshots.capturedAt)),
       db
         .select({ min: sql<Date | null>`min(${outageSnapshots.observedAt})` })
         .from(outageSnapshots),
@@ -162,8 +168,8 @@ const queryHistory = async (range: HistoryRange): Promise<History | null> => {
 
     return {
       range,
-      outages: downsample(outages, 600).map((r) => ({ ...r, t: r.t.toISOString() })),
-      system: downsample(system, 600).map((r) => ({ ...r, t: r.t.toISOString() })),
+      outages: outages.map((r) => ({ ...r, t: r.t.toISOString() })),
+      system: system.map((r) => ({ ...r, t: r.t.toISOString() })),
       since: first?.min ? new Date(first.min).toISOString() : null,
     };
   } catch (e) {
