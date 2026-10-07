@@ -1,4 +1,4 @@
-// Apagón Puerto Rico service worker: offline fallback + outage alerts.
+// Apagón Puerto Rico service worker: offline fallback.
 const CACHE = "apagon-v1";
 const API = ["/api/outages", "/api/system", "/api/history"];
 // On a weak signal, show the saved page after this long instead of spinning.
@@ -68,39 +68,4 @@ self.addEventListener("fetch", (event) => {
   } else if (url.pathname.startsWith("/_next/static/")) {
     event.respondWith(cacheFirst(request));
   }
-});
-
-self.addEventListener("push", (event) => {
-  let data = {};
-  try {
-    data = event.data ? event.data.json() : {};
-  } catch {
-    data = { title: "Apagón Puerto Rico", body: event.data ? event.data.text() : "" };
-  }
-  event.waitUntil(
-    self.registration.showNotification(data.title || "Apagón Puerto Rico", {
-      body: data.body || "",
-      tag: data.tag,
-      renotify: !!data.tag,
-      icon: "/pwa-icon/192",
-      badge: "/pwa-icon/192",
-      data: { url: data.url || "/" },
-    })
-  );
-});
-
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-  const target = new URL(event.notification.data?.url || "/", self.location.origin).href;
-  event.waitUntil(
-    (async () => {
-      const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
-      const open = windows.find((w) => new URL(w.url).origin === self.location.origin);
-      if (open) {
-        await open.focus();
-        return open.navigate(target);
-      }
-      return self.clients.openWindow(target);
-    })()
-  );
 });

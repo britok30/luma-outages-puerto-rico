@@ -1,6 +1,5 @@
 import {
   bigint,
-  boolean,
   index,
   integer,
   jsonb,
@@ -67,23 +66,3 @@ export const systemSnapshots = pgTable(
   (t) => [index("system_snapshots_captured_at_idx").on(t.capturedAt)]
 );
 
-/**
- * Web Push subscriptions for outage alerts: one row per browser. `region` is a
- * LUMA region name, or null for the island-wide total. `above` / `loadShedActive`
- * remember the last state we notified about, so each change alerts once.
- */
-export const pushSubscriptions = pgTable("push_subscriptions", {
-  id: serial("id").primaryKey(),
-  endpoint: text("endpoint").notNull().unique(),
-  p256dh: text("p256dh").notNull(),
-  auth: text("auth").notNull(),
-  region: text("region"),
-  /** Alert when % without service reaches this. */
-  threshold: integer("threshold").notNull(),
-  loadShed: boolean("load_shed").notNull().default(true),
-  lang: text("lang").notNull().default("es"),
-  above: boolean("above").notNull().default(false),
-  loadShedActive: boolean("load_shed_active").notNull().default(false),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
-});

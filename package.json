@@ -23,8 +23,7 @@
     "react-dom": "^19.2.4",
     "react-map-gl": "^8.1.2",
     "swr": "^2.4.0",
-    "tailwind-merge": "^2.5.4",
-    "web-push": "^3.6.7"
+    "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
@@ -33,7 +32,6 @@
     "@types/react": "^19",
     "@types/react-csv": "^1.1.10",
     "@types/react-dom": "^19",
-    "@types/web-push": "^3.6.4",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
     "eslint-config-next": "^15.0.2",

@@ -4,7 +4,6 @@ import { revalidateTag, unstable_cache } from "next/cache";
 import type { Outage, SystemOverview } from "../types";
 import { parseLumaTimestamp } from "../time";
 import { getDb, schema } from "./index";
-import { notifyAlerts } from "../alerts";
 
 const { outageSnapshots, regionSnapshots, systemSnapshots } = schema;
 
@@ -56,8 +55,6 @@ export const recordOutageSnapshot = async (outage: Outage): Promise<boolean> => 
 
     if (!rows[0]) return false; // already recorded
     revalidateTag("history", "max");
-    // Exactly one caller gets here per LUMA update, so alerts go out once.
-    await notifyAlerts(outage);
     return true;
   } catch (e) {
     console.error("recordOutageSnapshot failed:", e);

@@ -1,7 +1,6 @@
 "use client";
 
 import { useLang, type Lang } from "@/lib/i18n";
-import { VAPID_PUBLIC_KEY } from "@/lib/alerts-config";
 
 const LangButton = ({
   value,
@@ -57,11 +56,6 @@ export const Header = () => {
           <a href="#regions" className="hover:text-cream transition-colors">
             {t("Regiones", "Regions")}
           </a>
-          {VAPID_PUBLIC_KEY && (
-            <a href="#alerts" className="hover:text-cream transition-colors">
-              {t("Alertas", "Alerts")}
-            </a>
-          )}
           <a href="#history" className="hover:text-cream transition-colors">
             {t("Historial", "History")}
           </a>

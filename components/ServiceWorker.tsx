@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 
-/** Registers /sw.js (offline fallback + push). Resolves to null where unsupported. */
-export const registerServiceWorker = async () => {
+/** Registers /sw.js (offline fallback). Resolves to null where unsupported. */
+const registerServiceWorker = async () => {
   if (!("serviceWorker" in navigator)) return null;
   await navigator.serviceWorker.register("/sw.js");
   return navigator.serviceWorker.ready;

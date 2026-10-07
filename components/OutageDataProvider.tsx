@@ -9,7 +9,6 @@ import { Container, Eyebrow, Split } from "./Editorial";
 import { LiveDot, UpdatedAt, useFreshness } from "./Freshness";
 import { RegionLedger } from "./RegionLedger";
 import { RegionMap } from "./RegionMap";
-import { Alerts } from "./Alerts";
 
 // Mapbox (tiles + WebGL, ~1 MB) only loads when someone asks for it.
 const PuertoRicoMap = dynamic(
@@ -284,8 +283,6 @@ export const OutageDataProvider = ({ fallbackData }: { fallbackData?: Outage }) 
       >
         <RegionLedger regions={regions} />
       </Split>
-
-      <Alerts regions={regions} />
     </>
   );
 };

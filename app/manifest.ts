@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Apagón Puerto Rico",
     short_name: "Apagón PR",
     description:
-      "Clientes sin luz en Puerto Rico ahora mismo, por región. Datos de LUMA cada 5 minutos, con alertas.",
+      "Clientes sin luz en Puerto Rico ahora mismo, por región. Datos de LUMA cada 5 minutos.",
     lang: "es-PR",
     start_url: "/",
     scope: "/",
