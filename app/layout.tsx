@@ -4,6 +4,7 @@ import { cookies, headers } from "next/headers";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { LanguageProvider } from "@/lib/i18n";
+import { ServiceWorker } from "@/components/ServiceWorker";
 import { LANG_COOKIE, isLang, type Lang } from "@/lib/lang";
 
 const grotesk = Instrument_Sans({
@@ -97,6 +98,7 @@ export default async function RootLayout({
     <html lang={lang} className={grotesk.variable}>
       <body className="bg-ink text-cream">
         <Analytics />
+        <ServiceWorker />
         <LanguageProvider initialLang={lang}>{children}</LanguageProvider>
       </body>
     </html>

@@ -9,6 +9,7 @@ import RegionsJSON from "@/lib/puerto-rico.json";
 import { Regions } from "@/lib/types";
 import { useLang, formatNumber } from "@/lib/i18n";
 import { severityHex as severityColor } from "./RegionLedger";
+import { MapLegend, SEVERITY_STEPS } from "./MapLegend";
 
 interface HoverInfo {
   x: number;
@@ -30,14 +31,6 @@ const normalize = (s: string) =>
     .replace(/[̀-ͯ]/g, "")
     .trim()
     .toLowerCase();
-
-const SEVERITY_STEPS: Array<[number, string]> = [
-  [0, severityColor(0)],
-  [1, severityColor(1)],
-  [5, severityColor(5)],
-  [20, severityColor(20)],
-  [50, severityColor(50)],
-];
 
 export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
   const { t } = useLang();
@@ -168,34 +161,7 @@ export const PuertoRicoMap = ({ regions }: { regions: Regions[] }) => {
 
       {hoverInfo && <Tooltip hoverInfo={hoverInfo} />}
 
-      <Legend />
-    </div>
-  );
-};
-
-const Legend = () => {
-  const { t } = useLang();
-  const labels = ["<1%", "1–5%", "5–20%", "20–50%", "≥50%"];
-  return (
-    <div
-      aria-label={t("Leyenda", "Legend")}
-      className="absolute left-4 bottom-4 z-10 bg-cream/90 backdrop-blur-sm border border-cream-3 px-3 py-2.5 text-[11px] text-moss"
-    >
-      <p className="eyebrow text-ink mb-2">
-        {t("Sin servicio", "Without service")}
-      </p>
-      <ul className="flex flex-wrap gap-x-3 gap-y-1">
-        {SEVERITY_STEPS.map(([, color], i) => (
-          <li key={color} className="flex items-center gap-1">
-            <span
-              className="inline-block w-2.5 h-2.5"
-              style={{ backgroundColor: color }}
-              aria-hidden
-            />
-            {labels[i]}
-          </li>
-        ))}
-      </ul>
+      <MapLegend />
     </div>
   );
 };

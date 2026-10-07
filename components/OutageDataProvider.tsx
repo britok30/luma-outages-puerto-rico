@@ -2,17 +2,32 @@
 
 import useSWR from "swr";
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { Outage } from "@/lib/types";
 import { useLang, formatNumber } from "@/lib/i18n";
 import { Container, Eyebrow, Split } from "./Editorial";
 import { LiveDot, UpdatedAt, useFreshness } from "./Freshness";
 import { RegionLedger } from "./RegionLedger";
+import { RegionMap } from "./RegionMap";
+import { Alerts } from "./Alerts";
 
+// Mapbox (tiles + WebGL, ~1 MB) only loads when someone asks for it.
 const PuertoRicoMap = dynamic(
   () => import("./PuertoRicoMap").then((m) => m.PuertoRicoMap),
   { ssr: false, loading: () => <div className="w-full h-full bg-cream-2" /> }
 );
+const HAS_MAPBOX = !!process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
+const subscribeOnline = (cb: () => void) => {
+  window.addEventListener("online", cb);
+  window.addEventListener("offline", cb);
+  return () => {
+    window.removeEventListener("online", cb);
+    window.removeEventListener("offline", cb);
+  };
+};
+const useOnline = () =>
+  useSyncExternalStore(subscribeOnline, () => navigator.onLine, () => true);
 
 class FetchError extends Error {
   status?: number;
@@ -43,6 +58,8 @@ export const OutageDataProvider = ({ fallbackData }: { fallbackData?: Outage }) 
     }
   );
   const { stale } = useFreshness(clients?.timestamp);
+  const online = useOnline();
+  const [interactiveMap, setInteractiveMap] = useState(false);
 
   const regions = useMemo(
     () =>
@@ -158,7 +175,14 @@ export const OutageDataProvider = ({ fallbackData }: { fallbackData?: Outage }) 
                 >
                   {isValidating ? t("Actualizando…", "Refreshing…") : t("Actualizar", "Refresh")}
                 </button>
-                {error && (
+                {!online ? (
+                  <span role="status" className="text-ochre">
+                    {t(
+                      "Sin conexión; mostrando los últimos datos guardados.",
+                      "Offline; showing the last saved data."
+                    )}
+                  </span>
+                ) : error && (
                   <span role="status" className="text-ochre">
                     {t(
                       "LUMA no respondió; mostrando el último dato disponible.",
@@ -170,8 +194,21 @@ export const OutageDataProvider = ({ fallbackData }: { fallbackData?: Outage }) 
             </div>
 
             <div className="lg:col-span-7 lg:border-l border-ink-3 relative min-h-[420px] lg:min-h-0">
-              <div className="absolute inset-0">
-                <PuertoRicoMap regions={regions} />
+              <div className="absolute inset-0 bg-cream-2">
+                {interactiveMap ? <PuertoRicoMap regions={regions} /> : <RegionMap regions={regions} />}
+                {HAS_MAPBOX && (
+                  <button
+                    type="button"
+                    onClick={() => setInteractiveMap((v) => !v)}
+                    className={`absolute top-4 z-10 eyebrow bg-cream/90 backdrop-blur-sm border border-cream-3 text-ink px-3 py-2 hover:bg-cream transition-colors ${
+                      interactiveMap ? "left-4" : "right-4"
+                    }`}
+                  >
+                    {interactiveMap
+                      ? t("Mapa simple", "Simple map")
+                      : t("Mapa interactivo", "Interactive map")}
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -247,6 +284,8 @@ export const OutageDataProvider = ({ fallbackData }: { fallbackData?: Outage }) 
       >
         <RegionLedger regions={regions} />
       </Split>
+
+      <Alerts regions={regions} />
     </>
   );
 };
